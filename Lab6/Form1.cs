@@ -79,17 +79,21 @@ namespace Lab6
             {
                 try
                 {
-                    Compile();
+                    
                     // var sw = new StringWriter();
                     // TextWriter sww = Console.Out;
                     //  Console.SetOut(sw);
                     // Console.SetError(sw);
                     //Console.SetCursorPosition(0, 0);
                     // textBox_output.Text = Console.ReadLine();
+                    //Console.WriteLine("You are travelling north at a speed of 10m/s");
+
                     using (StringWriter stringWriter = new StringWriter())
                     {
                         Console.SetOut(stringWriter);
-                        Console.WriteLine("You are travelling north at a speed of 10m / s");                     
+                        Compile();
+                        //All console outputs goes here
+
                         string consoleOutput = stringWriter.ToString();
                         textBox_output.Text = consoleOutput;
                     }
@@ -131,18 +135,18 @@ namespace Lab6
                         //System.IO.StringWriter stringWriter = new System.IO.StringWriter();
                         //System.Console.SetOut(stringWriter);
                         //System.Console.WriteLine(x);
-                    using (StringWriter stringWriter = new StringWriter())
+                    using (System.IO.StringWriter stringWriter = new System.IO.StringWriter())
                     {
-                        Console.SetOut(stringWriter);
-                        Console.WriteLine)x);                     
+                        System.Console.SetOut(stringWriter);
+                        System.Console.WriteLine(x);                     
                         string consoleOutput = stringWriter.ToString();
-                        textBox_output.Text = consoleOutput;
+                        //textBox_output.Text = consoleOutput;
                     }
             }
         }
             public static void Main() //Это должен видеть пользователь по мнению Илюхи
             {
-                System.Console.WriteLine(""You are travelling north at a speed of 10m / s"");
+                System.Console.WriteLine(""изи"");
                 //string s = ""dfd"";
                 //Wrote w = new Wrote();
                 //w.Write(s);
