@@ -68,7 +68,9 @@ namespace Lab6
             using Microsoft.CSharp;
             using System.IO;
 namespace Lab6 //Скрыть от пользователя
-    {  
+{  
+public class Program 
+{ 
 interface Write 
 { 
 void WriteLine(string x); 
@@ -79,9 +81,8 @@ public void WriteLine(string x)
 { 
 Console.WriteLine(x); 
 } 
-}
 UI text = new UI();
-
+}
         {" + textBox_input.Text + "}    }";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
             
