@@ -30,7 +30,8 @@ namespace Lab6
          "System.Linq.dll",
          "System.Threading.Tasks.dll",
          "System.Windows.Forms.dll",
-         "mscorlib.dll"
+         "mscorlib.dll",
+         "System.Data.dll"
         };
 
         static Dictionary<string, string> providerOptions = new Dictionary<string, string>
@@ -65,7 +66,7 @@ namespace Lab6
             Assembly assembly = results.CompiledAssembly; //Получаем скомпилированную сборку в объект типа Assembly
             Type program = assembly.GetType("Lab6.Program"); //
             MethodInfo main = program.GetMethod("Main"); //
-
+            
             timer.Stop();
             time = 0;
 
@@ -75,7 +76,7 @@ namespace Lab6
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 1)
+            if (time >= 4)
             {
                 try
                 {
@@ -92,8 +93,6 @@ namespace Lab6
                     {
                         Console.SetOut(stringWriter);
                         Compile();
-                        //All console outputs goes here
-
                         string consoleOutput = stringWriter.ToString();
                         textBox_output.Text = consoleOutput;
                     }
@@ -120,37 +119,28 @@ namespace Lab6
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox_input.Text =
-@"namespace Lab6 //Скрыть от пользователя
+@"using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Reflection;
+using System.CodeDom.Compiler;
+using Microsoft.CSharp;
+using System.IO;
+namespace Lab6 //Скрыть от пользователя
    {  //Сюда написать интерфейс(похожий на Console) и класс который его реализует (UI) и скрыть от пользователя
         public class Program // Тут объявить объект класса, реализующего UI и скрыть от пользователя
         {
-        interface OutPut
-        {
-            void Write(string x);
-        }
-        public class Wrote:OutPut
-        {
-            public void Write(string x)
-            {
-                        //System.IO.StringWriter stringWriter = new System.IO.StringWriter();
-                        //System.Console.SetOut(stringWriter);
-                        //System.Console.WriteLine(x);
-                    using (System.IO.StringWriter stringWriter = new System.IO.StringWriter())
-                    {
-                        System.Console.SetOut(stringWriter);
-                        System.Console.WriteLine(x);                     
-                        string consoleOutput = stringWriter.ToString();
-                        //textBox_output.Text = consoleOutput;
-                    }
-            }
-        }
             public static void Main() //Это должен видеть пользователь по мнению Илюхи
             {
-                System.Console.WriteLine(""изи"");
-                //string s = ""dfd"";
-                //Wrote w = new Wrote();
-                //w.Write(s);
-        }
+
+            }
         }
    }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
