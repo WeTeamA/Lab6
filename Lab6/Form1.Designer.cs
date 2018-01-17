@@ -29,27 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBox_input = new System.Windows.Forms.TextBox();
             this.textBox_output = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
-            // textBox_input
-            // 
-            this.textBox_input.Font = new System.Drawing.Font("Consolas", 9.5F);
-            this.textBox_input.Location = new System.Drawing.Point(12, 12);
-            this.textBox_input.Multiline = true;
-            this.textBox_input.Name = "textBox_input";
-            this.textBox_input.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_input.Size = new System.Drawing.Size(697, 419);
-            this.textBox_input.TabIndex = 0;
-            this.textBox_input.TextChanged += new System.EventHandler(this.textBox_input_TextChanged);
-            // 
             // textBox_output
             // 
             this.textBox_output.BackColor = System.Drawing.SystemColors.WindowText;
-            this.textBox_output.Font = new System.Drawing.Font("Consolas", 9.5F);
+            this.textBox_output.Font = new System.Drawing.Font("Consolas", 10F);
             this.textBox_output.ForeColor = System.Drawing.SystemColors.Window;
             this.textBox_output.Location = new System.Drawing.Point(12, 437);
             this.textBox_output.Multiline = true;
@@ -65,11 +53,13 @@
             // 
             // richTextBox
             // 
+            this.richTextBox.Font = new System.Drawing.Font("Consolas", 10F);
             this.richTextBox.Location = new System.Drawing.Point(12, 12);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(697, 211);
+            this.richTextBox.Size = new System.Drawing.Size(697, 419);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
+            this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
             // 
             // Form1
             // 
@@ -78,7 +68,6 @@
             this.ClientSize = new System.Drawing.Size(721, 602);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.textBox_output);
-            this.Controls.Add(this.textBox_input);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -88,8 +77,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBox_input;
         private System.Windows.Forms.TextBox textBox_output;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.RichTextBox richTextBox;

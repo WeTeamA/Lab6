@@ -76,7 +76,7 @@ namespace Lab6
    {  
       public class Program
       {
-" + textBox_input.Text + @"
+" + richTextBox.Text + @"
       }
    }";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, CodeForCompile); //Получаем результат исполнения исходного кода при примененных параметрах
@@ -103,22 +103,26 @@ namespace Lab6
             
         }
 
-        //Метод, подсвечивающий ключевые слова
+        /// <summary>
+        /// Метод, подсвечивающий ключевые слова
+        /// </summary>
         public void CheckSyntax()
         {
-            Regex KeyWords = new Regex("abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|void|volatile|var");
-            string str = DateTime.Now.ToLongTimeString();
-            richTextBox.AppendText(str + "\r\n" + "SOmeText" + "\r\n");
-            int i = 0;
-            while (i <= richTextBox.Text.Length - str.Length)
+            Regex KeyWords = new Regex("abstract |as |base |bool |break |byte |case |catch |char |checked |class |const |continue |decimal |default |delegate |do |double |else |enum |event |explicit |extern |false |finally |fixed |float |for |foreach |goto |if |implicit |in |int |interface |internal |is |lock |long |namespace |new |null |object |operator |out |override |params |private |protected |public |readonly |ref |return |sbyte |sealed |short |sizeof |stackalloc |static |string |struct |switch |this |throw |true |try |typeof |uint |ulong |unchecked |unsafe |ushort |using |virtual |void |volatile |var ");
+            MatchCollection Matches = KeyWords.Matches(richTextBox.Text);
+            if (Matches.Count != 0)
             {
-                i = richTextBox.Text.IndexOf(str, i);
-                if (i < 0) break;
-                richTextBox.SelectionStart = i;
-                richTextBox.SelectionLength = str.Length;
-                richTextBox.SelectionColor = Color.Blue;
-                i += str.Length;
-            }
+                foreach (Match Match in Matches)
+                {
+                    richTextBox.SelectionStart = Match.Index;
+                    richTextBox.SelectionLength = Match.Length;
+                    richTextBox.SelectionColor = Color.LightBlue;
+                }
+              
+                //richTextBox.SelectionStart = cur;
+                richTextBox.SelectionLength = 0;
+                richTextBox.SelectionColor = Color.Black;        
+    }
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -132,7 +136,6 @@ namespace Lab6
                     {
                         Console.SetOut(stringWriter); //Связываем консоль с объектом stringWriter
                         Compile();
-                        CheckSyntax();
                         textBox_output.Text = stringWriter.ToString();
                     }
                 }
@@ -147,22 +150,23 @@ namespace Lab6
             }
         }
 
-        private void textBox_input_TextChanged(object sender, EventArgs e)
-        {
-            timer.Stop();
-            time = 0;
-            timer.Start();
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox_input.Text =
+            richTextBox.Text =
 @"public static void Main()
     {
 
     }
 ";
            compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
+        }
+
+        private void richTextBox_TextChanged(object sender, EventArgs e)
+        {
+            CheckSyntax();
+            timer.Stop();
+            time = 0;
+            timer.Start();
         }
     }
 }
