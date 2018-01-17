@@ -71,17 +71,7 @@ namespace Lab6 //Скрыть от пользователя
 { 
 public class Program 
 { 
-interface OutPut 
-{ 
-void Out(string x); 
-} 
-public class WriteText:OutPut 
-{ 
-public void Out(string x) 
-{ 
-Console.WriteLine(x); 
-} 
-}
+
         {" + textBox_input.Text + "}    }}";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
             
@@ -157,7 +147,7 @@ Console.WriteLine(x);
             textBox_input.Text =
 @"public static void Main()
 {
-//Вывод осуществляется через UI.WriteLine(ваша строка)
+
 }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
