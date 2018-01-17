@@ -68,8 +68,19 @@ namespace Lab6
             using Microsoft.CSharp;
             using System.IO;
 namespace Lab6 //Скрыть от пользователя
-    {  //Сюда написать интерфейс(похожий на Console) и класс который его реализует (UI) и скрыть от пользователя
-        public class Program // Тут объявить объект класса, реализующего UI и скрыть от пользователя
+    {  
+interface Write 
+{ 
+void WriteLine(string x); 
+} 
+public class Text:Write 
+{ 
+public void WriteLine(string x) 
+{ 
+Console.WriteLine(x); 
+} 
+Text text = new Text();
+
         {" + textBox_input.Text + "}    }";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
             
@@ -145,7 +156,7 @@ namespace Lab6 //Скрыть от пользователя
             textBox_input.Text =
 @"public static void Main()
 {
-
+//Вывод осуществляется через
 }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
