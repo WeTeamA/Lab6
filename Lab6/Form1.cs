@@ -25,6 +25,10 @@ namespace Lab6
         /// Переменная для счета времени, прошедшего после написания кода (для активации компиляции)
         /// </summary>
         int time;
+        /// <summary>
+        /// Текст компилируемого кода
+        /// </summary>
+        string code;
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -49,7 +53,25 @@ namespace Lab6
         StringBuilder sb = new StringBuilder();
         public void Compile()
         {
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, textBox_input.Text); //Получаем результат исполнения исходного кода при примененных параметрах
+            code = @"using System;
+            using System.Collections.Generic;
+            using System.ComponentModel;
+            using System.Data;
+            using System.Drawing;
+            using System.Linq;
+            using System.Text;
+            using System.Threading;
+            using System.Threading.Tasks;
+            using System.Windows.Forms;
+            using System.Reflection;
+            using System.CodeDom.Compiler;
+            using Microsoft.CSharp;
+            using System.IO;
+namespace Lab6 //Скрыть от пользователя
+    {  //Сюда написать интерфейс(похожий на Console) и класс который его реализует (UI) и скрыть от пользователя
+        public class Program // Тут объявить объект класса, реализующего UI и скрыть от пользователя
+        {" + textBox_input.Text + "}    }";
+            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
             
             #region Отлов ошибок
             if (results.Errors.HasErrors)
@@ -71,12 +93,14 @@ namespace Lab6
             time = 0;
 
             main.Invoke(null, null); //Запускаем метод main
+            string nspace = "...";
+
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 4)
+            if (time >= 2)
             {
                 try
                 {
@@ -119,30 +143,10 @@ namespace Lab6
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox_input.Text =
-@"using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Reflection;
-using System.CodeDom.Compiler;
-using Microsoft.CSharp;
-using System.IO;
-namespace Lab6 //Скрыть от пользователя
-   {  //Сюда написать интерфейс(похожий на Console) и класс который его реализует (UI) и скрыть от пользователя
-        public class Program // Тут объявить объект класса, реализующего UI и скрыть от пользователя
-        {
-            public static void Main() //Это должен видеть пользователь по мнению Илюхи
-            {
+@"public static void Main()
+{
 
-            }
-        }
-   }";
+}";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
     }
