@@ -53,35 +53,34 @@ namespace Lab6
         StringBuilder sb = new StringBuilder();
         public void Compile()
         {
-            code = @"using System;
-            using System.Collections.Generic;
-            using System.ComponentModel;
-            using System.Data;
-            using System.Drawing;
-            using System.Linq;
-            using System.Text;
-            using System.Threading;
-            using System.Threading.Tasks;
-            using System.Windows.Forms;
-            using System.Reflection;
-            using System.CodeDom.Compiler;
-            using Microsoft.CSharp;
-            using System.IO;
-namespace Lab6 //Скрыть от пользователя
-{  
+            code = @"using System; 
+using System.Collections.Generic; 
+using System.ComponentModel; 
+using System.Data; 
+using System.Drawing; 
+using System.Linq; 
+using System.Text; 
+using System.Threading; 
+using System.Threading.Tasks; 
+using System.Windows.Forms; 
+using System.Reflection; 
+using System.CodeDom.Compiler; 
+using Microsoft.CSharp; 
+using System.IO; 
+namespace Lab6 //Скрыть от пользователя 
+{ 
 public class Program 
 { 
-interface Write 
+interface OutPut 
 { 
-void WriteLine(string x); 
+void Out(string x); 
 } 
-public class UI:Write 
+public class WriteText:OutPut 
 { 
-public void WriteLine(string x) 
+public void Out(string x) 
 { 
 Console.WriteLine(x); 
 } 
-//UI text = new UI();
 }
         {" + textBox_input.Text + "}    }}";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
