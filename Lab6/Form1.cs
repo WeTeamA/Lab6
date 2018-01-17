@@ -73,13 +73,13 @@ interface Write
 { 
 void WriteLine(string x); 
 } 
-public class Text:Write 
+public class UI:Write 
 { 
 public void WriteLine(string x) 
 { 
 Console.WriteLine(x); 
 } 
-Text text = new Text();
+UI text = new UI();
 
         {" + textBox_input.Text + "}    }";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
@@ -156,7 +156,7 @@ Text text = new Text();
             textBox_input.Text =
 @"public static void Main()
 {
-//Вывод осуществляется через
+//Вывод осуществляется через UI.WriteLine(ваша строка)
 }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
