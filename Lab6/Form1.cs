@@ -81,9 +81,9 @@ public void WriteLine(string x)
 { 
 Console.WriteLine(x); 
 } 
-UI text = new UI();
+//UI text = new UI();
 }
-        {" + textBox_input.Text + "}    }";
+        {" + textBox_input.Text + "}    }}";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
             
             #region Отлов ошибок
