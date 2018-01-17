@@ -108,27 +108,32 @@ namespace Lab6
         /// </summary>
         public void CheckSyntax()
         {
+            int Cursor = richTextBox.SelectionStart;
+
+            richTextBox.SelectionStart = 0;
+            richTextBox.SelectionLength = richTextBox.Text.Length;
+            richTextBox.SelectionColor = Color.White;
+
             Regex KeyWords = new Regex("abstract |as |base |bool |break |byte |case |catch |char |checked |class |const |continue |decimal |default |delegate |do |double |else |enum |event |explicit |extern |false |finally |fixed |float |for |foreach |goto |if |implicit |in |int |interface |internal |is |lock |long |namespace |new |null |object |operator |out |override |params |private |protected |public |readonly |ref |return |sbyte |sealed |short |sizeof |stackalloc |static |string |struct |switch |this |throw |true |try |typeof |uint |ulong |unchecked |unsafe |ushort |using |virtual |void |volatile |var ");
             MatchCollection Matches = KeyWords.Matches(richTextBox.Text);
+
             if (Matches.Count != 0)
             {
                 foreach (Match Match in Matches)
                 {
                     richTextBox.SelectionStart = Match.Index;
                     richTextBox.SelectionLength = Match.Length;
-                    richTextBox.SelectionColor = Color.LightBlue;
+                    richTextBox.SelectionColor = Color.LightGreen;
                 }
-              
-                //richTextBox.SelectionStart = cur;
+                richTextBox.SelectionStart = Cursor;
                 richTextBox.SelectionLength = 0;
-                richTextBox.SelectionColor = Color.Black;        
-    }
+            }
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 2)
+            if (time >= 1)
             {
                 try
                 {
@@ -136,6 +141,7 @@ namespace Lab6
                     {
                         Console.SetOut(stringWriter); //Связываем консоль с объектом stringWriter
                         Compile();
+                        CheckSyntax();
                         textBox_output.Text = stringWriter.ToString();
                     }
                 }
@@ -163,7 +169,6 @@ namespace Lab6
 
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
-            CheckSyntax();
             timer.Stop();
             time = 0;
             timer.Start();

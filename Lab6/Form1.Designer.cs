@@ -53,7 +53,9 @@
             // 
             // richTextBox
             // 
+            this.richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.richTextBox.Font = new System.Drawing.Font("Consolas", 10F);
+            this.richTextBox.ForeColor = System.Drawing.SystemColors.MenuBar;
             this.richTextBox.Location = new System.Drawing.Point(12, 12);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.Size = new System.Drawing.Size(697, 419);
