@@ -61,7 +61,7 @@ namespace Lab6
             // textBox_input
             // 
             this.textBox_input.BackColor = System.Drawing.Color.FloralWhite;
-            this.textBox_input.Font = new System.Drawing.Font("Modern No. 20", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_input.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox_input.Location = new System.Drawing.Point(12, 12);
             this.textBox_input.Name = "textBox_input";
             this.textBox_input.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;

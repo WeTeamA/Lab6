@@ -71,8 +71,20 @@ namespace Lab6 //Скрыть от пользователя
 { 
 public class Program 
 { 
+interface Write 
+{ 
+void WriteLine(string x); 
+} 
+public class ui:Write  
+{ 
+public void WriteLine(string x) 
+{ 
+Console.WriteLine(x); 
+} 
+}
+ui UI = new UI();
 
-        {" + textBox_input.Text + "}    }}";
+        " + textBox_input.Text + "    }}";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
             
             #region Отлов ошибок
@@ -147,7 +159,7 @@ public class Program
             textBox_input.Text =
 @"public static void Main()
 {
-
+//Используйте UI.WriteLine(string) для вывода
 }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
