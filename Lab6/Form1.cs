@@ -43,15 +43,16 @@ namespace Lab6
         {
             {"CompilerVersion", "v4.0"}
         };
+                
 
-        CSharpCodeProvider provider = new CSharpCodeProvider(providerOptions); //Создаем объект компилятора
+        CSharpCodeProvider provider = new CSharpCodeProvider(providerOptions);
 
-        CompilerParameters compilerParams = new CompilerParameters //Задаем параметры компилятору
+        CompilerParameters compilerParams = new CompilerParameters
         {
             GenerateInMemory = true,
-            GenerateExecutable = true,
+            GenerateExecutable = false
         };
-        StringBuilder sb = new StringBuilder();
+        StringBuilder strb = new StringBuilder();
         public void Compile()
         {
             code = @"using System; 
@@ -86,30 +87,32 @@ Console.WriteLine(x);
 static ui UI = new ui();
 
         " + textBox_input.Text + "    }}";
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
-            
-            #region Отлов ошибок
+            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code);
+
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError error in results.Errors)
                 {
-                    sb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                    strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
                 }
-                throw new InvalidOperationException(sb.ToString());
+                throw new InvalidOperationException(strb.ToString());
             }
-#endregion
 
-            //Используем рефлексию для манипуляциями полученных классов и методов
-            Assembly assembly = results.CompiledAssembly; //Получаем скомпилированную сборку в объект типа Assembly
-            Type program = assembly.GetType("Lab6.Program"); //
-            MethodInfo main = program.GetMethod("Main"); //
-            
+            Assembly assembly = results.CompiledAssembly;
+            Type program = assembly.GetType("Lab6.Program");
+            MethodInfo method = program.GetMethod("Main");
+
             timer.Stop();
             time = 0;
 
-            main.Invoke(null, null); //Запускаем метод main
-            string nspace = "...";
-
+            object obj = results.CompiledAssembly.CreateInstance("Lab6.Program");
+            MethodInfo info = obj.GetType().GetMethod("Main");
+            var sw = new StringWriter();
+            Console.SetOut(sw);
+            Console.SetError(sw);
+            info.Invoke(obj, null);
+            string result = sw.ToString();
+            textBox_output.Text += result;
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -132,8 +135,6 @@ static ui UI = new ui();
                     {
                         Console.SetOut(stringWriter);
                         Compile();
-                        string consoleOutput = stringWriter.ToString();
-                        textBox_output.Text = consoleOutput;
                     }
 
                 }
@@ -142,8 +143,8 @@ static ui UI = new ui();
                     timer.Stop();
                     time = 0;
                     textBox_output.Clear();                 
-                    textBox_output.Text = sb.ToString();
-                    sb.Clear();
+                    textBox_output.Text = strb.ToString();
+                    strb.Clear();
                 }
             }
         }
@@ -177,7 +178,7 @@ static ui UI = new ui();
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox_input.Text =
-@"public static void Main()
+@"public void Main()
 {
 //Используйте UI.WriteLine(string) для вывода
 }";
