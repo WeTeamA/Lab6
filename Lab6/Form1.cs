@@ -79,6 +79,7 @@ public void WriteLine(string x)
 { 
 Console.WriteLine(x); 
 } 
+}
 UI text = new UI();
 
         {" + textBox_input.Text + "}    }";
