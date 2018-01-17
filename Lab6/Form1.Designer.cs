@@ -1,4 +1,11 @@
-﻿namespace Lab6
+﻿
+
+
+
+
+
+
+namespace Lab6
 {
     partial class Form1
     {
