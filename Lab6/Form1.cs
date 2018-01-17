@@ -75,7 +75,7 @@ namespace Lab6
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 3)
+            if (time >= 1)
             {
                 try
                 {
@@ -84,7 +84,16 @@ namespace Lab6
                     // TextWriter sww = Console.Out;
                     //  Console.SetOut(sw);
                     // Console.SetError(sw);
-                    textBox_output.Text = Console.Out.ToString();
+                    //Console.SetCursorPosition(0, 0);
+                    // textBox_output.Text = Console.ReadLine();
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        Console.SetOut(stringWriter);
+                        Console.WriteLine("You are travelling north at a speed of 10m / s");                     
+                        string consoleOutput = stringWriter.ToString();
+                        textBox_output.Text = consoleOutput;
+                    }
+
                 }
                 catch
                 {
@@ -111,10 +120,33 @@ namespace Lab6
    {  //Сюда написать интерфейс(похожий на Console) и класс который его реализует (UI) и скрыть от пользователя
         public class Program // Тут объявить объект класса, реализующего UI и скрыть от пользователя
         {
+        interface OutPut
+        {
+            void Write(string x);
+        }
+        public class Wrote:OutPut
+        {
+            public void Write(string x)
+            {
+                        //System.IO.StringWriter stringWriter = new System.IO.StringWriter();
+                        //System.Console.SetOut(stringWriter);
+                        //System.Console.WriteLine(x);
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        Console.SetOut(stringWriter);
+                        Console.WriteLine)x);                     
+                        string consoleOutput = stringWriter.ToString();
+                        textBox_output.Text = consoleOutput;
+                    }
+            }
+        }
             public static void Main() //Это должен видеть пользователь по мнению Илюхи
             {
-
-            }
+                System.Console.WriteLine(""You are travelling north at a speed of 10m / s"");
+                //string s = ""dfd"";
+                //Wrote w = new Wrote();
+                //w.Write(s);
+        }
         }
    }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
