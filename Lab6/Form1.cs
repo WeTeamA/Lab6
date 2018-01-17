@@ -99,16 +99,17 @@ static ui UI = new ui();
             }
 #endregion
 
-            //Используем рефлексию для манипуляциями полученных классов и методов
-            Assembly assembly = results.CompiledAssembly; //Получаем скомпилированную сборку в объект типа Assembly
-            Type program = assembly.GetType("Lab6.Program"); //
-            MethodInfo main = program.GetMethod("Main"); //
+            
+            Assembly assembly = results.CompiledAssembly; 
+            Type program = assembly.GetType("Lab6.Program"); 
+            MethodInfo main = program.GetMethod("Main"); 
             
             timer.Stop();
             time = 0;
 
-            main.Invoke(null, null); //Запускаем метод main
-            string nspace = "...";
+            object obj = results.CompiledAssembly.CreateInstance("Lab6.Program");
+            MethodInfo info = obj.GetType().GetMethod("Main");
+            info.Invoke(obj, null);
 
         }
 
@@ -175,9 +176,9 @@ static ui UI = new ui();
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox_input.Text =
-@"public static void Main()
+@"public  void Main()
 {
-//Используйте UI.WriteLine(string) для вывода
+//Используйте UI.WriteLine(string); для вывода
 }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
