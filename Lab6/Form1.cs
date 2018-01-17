@@ -99,17 +99,16 @@ static ui UI = new ui();
             }
 #endregion
 
-            
-            Assembly assembly = results.CompiledAssembly; 
-            Type program = assembly.GetType("Lab6.Program"); 
-            MethodInfo main = program.GetMethod("Main"); 
+            //Используем рефлексию для манипуляциями полученных классов и методов
+            Assembly assembly = results.CompiledAssembly; //Получаем скомпилированную сборку в объект типа Assembly
+            Type program = assembly.GetType("Lab6.Program"); //
+            MethodInfo main = program.GetMethod("Main"); //
             
             timer.Stop();
             time = 0;
 
-            object obj = results.CompiledAssembly.CreateInstance("Lab6.Program");
-            MethodInfo info = obj.GetType().GetMethod("Main");
-            info.Invoke(obj, null);
+            main.Invoke(null, null); //Запускаем метод main
+            string nspace = "...";
 
         }
 
@@ -159,6 +158,7 @@ static ui UI = new ui();
             Regex reg = new Regex(@"string|break|var|foreach|for|new|while|if |int |in |else|return|object|until|sbyte|shor|object|true|false|ushor|switch|case|null|long |ulong |float |double |char |bool |decimal |public|private|protected|void|static|delegate|enum|new|class\s[A-z,0-9]{1,10}|struct\s[A-z,0-9]{1,10}|interface\s[A-z,0-9]{1,10}|const");
             MatchCollection mycol = reg.Matches(textBox_input.Text);
 
+
             if (mycol.Count != 0)
             {
                 foreach (Match m in mycol)
@@ -167,6 +167,7 @@ static ui UI = new ui();
                     textBox_input.SelectionLength = m.Length;
                     textBox_input.SelectionColor = Color.Blue;
                 }
+
                 textBox_input.SelectionStart = cur;
                 textBox_input.SelectionLength = 0;
                 textBox_input.SelectionColor = Color.Black;
@@ -176,9 +177,9 @@ static ui UI = new ui();
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox_input.Text =
-@"public  void Main()
+@"public static void Main()
 {
-//Используйте UI.WriteLine(string); для вывода
+//Используйте UI.WriteLine(string) для вывода
 }";
             compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
