@@ -12,6 +12,7 @@ using System.Reflection;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Lab6
 {
@@ -82,7 +83,7 @@ public void WriteLine(string x)
 Console.WriteLine(x); 
 } 
 }
-ui UI = new UI();
+static ui UI = new ui();
 
         " + textBox_input.Text + "    }}";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code); //Получаем результат исполнения исходного кода при примененных параметрах
@@ -149,9 +150,25 @@ ui UI = new UI();
 
         private void textBox_input_TextChanged(object sender, EventArgs e)
         {
+            int cur = textBox_input.SelectionStart;
+            textBox_output.Clear();
             timer.Stop();
             time = 0;
             timer.Start();
+            Regex reg = new Regex(@"string|break|var|foreach|for|new|while|if |int |in |else|return|object|until|sbyte|shor|object|true|false|ushor|switch|case|null|long |ulong |float |double |char |bool |decimal |public|private|protected|void|static|delegate|enum|new|class\s[A-z,0-9]{1,10}|struct\s[A-z,0-9]{1,10}|interface\s[A-z,0-9]{1,10}|const");
+            MatchCollection mycol = reg.Matches(textBox_input.Text);
+            if (mycol.Count != 0)
+            {
+                foreach (Match m in mycol)
+                {
+                    textBox_input.SelectionStart = m.Index;
+                    textBox_input.SelectionLength = m.Length;
+                    textBox_input.SelectionColor = Color.Blue;
+                }
+                textBox_input.SelectionStart = cur;
+                textBox_input.SelectionLength = 0;
+                textBox_input.SelectionColor = Color.Black;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
