@@ -49,7 +49,7 @@ namespace Lab6
         CompilerParameters compilerParams = new CompilerParameters //Задаем параметры компилятору
         {
             GenerateInMemory = true,
-            GenerateExecutable = true,
+            GenerateExecutable = false,
         };
         /// <summary>
         /// Переменная для записи ошибок компиляции
@@ -87,21 +87,18 @@ namespace Lab6
                 foreach (CompilerError error in results.Errors)
                 {
                     err.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
-                    throw new Exception(); //Вызываем исключение 
                 }
             }
-#endregion
+            #endregion
 
             //Используем рефлексию для манипуляциями полученных классов и методов
-            //Assembly assembly = results.CompiledAssembly; //Получаем скомпилированную сборку в объект типа Assembly
             object ObjectOfProgram = results.CompiledAssembly.CreateInstance("Lab6.Program");
-            // Type program = assembly.GetType("Lab6.Program"); //
             MethodInfo main = ObjectOfProgram.GetType().GetMethod("Main");
 
             timer.Stop();
             time = 0;
 
-            main.Invoke(ObjectOfProgram, null); //Запускаем метод main
+            main.Invoke(ObjectOfProgram, null); //Запускаем метод main 
         }
 
         /// <summary>
@@ -140,7 +137,6 @@ namespace Lab6
                 {
                     using (StringWriter stringWriter = new StringWriter())
                     {
-                        CheckSyntax();
                         Console.SetOut(stringWriter); //Связываем консоль с объектом stringWriter
                         Compile();
                         textBox_output.Text = stringWriter.ToString();
@@ -160,7 +156,7 @@ namespace Lab6
         private void Form1_Load(object sender, EventArgs e)
         {
             richTextBox.Text =
-@"public static void Main()
+@"public void Main()
     {
 
     }
@@ -170,6 +166,7 @@ namespace Lab6
 
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
+            CheckSyntax();
             timer.Stop();
             time = 0;
             timer.Start();
