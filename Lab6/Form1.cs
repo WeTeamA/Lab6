@@ -90,18 +90,23 @@ namespace Lab6
                     throw new Exception(); //Вызываем исключение 
                 }
             }
-#endregion
+            #endregion
 
-            //Используем рефлексию для манипуляциями полученных классов и методов
-            //Assembly assembly = results.CompiledAssembly; //Получаем скомпилированную сборку в объект типа Assembly
-            object ObjectOfProgram = results.CompiledAssembly.CreateInstance("Lab6.Program");
-            // Type program = assembly.GetType("Lab6.Program"); //
-            MethodInfo main = ObjectOfProgram.GetType().GetMethod("Main");
+            Assembly assembly = results.CompiledAssembly;
+            Type program = assembly.GetType("Lab6.Program");
+            MethodInfo method = program.GetMethod("Main");
 
             timer.Stop();
             time = 0;
 
-            main.Invoke(ObjectOfProgram, null); //Запускаем метод main
+            object obj = results.CompiledAssembly.CreateInstance("Lab6.Program");
+            MethodInfo info = obj.GetType().GetMethod("Main");
+            var sw = new StringWriter();
+            Console.SetOut(sw);
+            Console.SetError(sw);
+            info.Invoke(obj, null);
+            string result = sw.ToString();
+            textBox_output.Text += result;
         }
 
         /// <summary>
@@ -160,7 +165,7 @@ namespace Lab6
         private void Form1_Load(object sender, EventArgs e)
         {
             richTextBox.Text =
-@"public void Main()
+@"public static void Main()
     {
 
     }
