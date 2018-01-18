@@ -39,11 +39,11 @@
             this.textBox_output.BackColor = System.Drawing.SystemColors.WindowText;
             this.textBox_output.Font = new System.Drawing.Font("Consolas", 10F);
             this.textBox_output.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox_output.Location = new System.Drawing.Point(12, 437);
+            this.textBox_output.Location = new System.Drawing.Point(0, 428);
             this.textBox_output.Multiline = true;
             this.textBox_output.Name = "textBox_output";
             this.textBox_output.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_output.Size = new System.Drawing.Size(697, 153);
+            this.textBox_output.Size = new System.Drawing.Size(721, 175);
             this.textBox_output.TabIndex = 1;
             // 
             // timer
@@ -56,9 +56,9 @@
             this.richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.richTextBox.Font = new System.Drawing.Font("Consolas", 10F);
             this.richTextBox.ForeColor = System.Drawing.SystemColors.MenuBar;
-            this.richTextBox.Location = new System.Drawing.Point(12, 12);
+            this.richTextBox.Location = new System.Drawing.Point(0, -1);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(697, 419);
+            this.richTextBox.Size = new System.Drawing.Size(721, 432);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
             this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
@@ -70,7 +70,9 @@
             this.ClientSize = new System.Drawing.Size(721, 602);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.textBox_output);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
+            this.ShowIcon = false;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
