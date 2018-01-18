@@ -87,6 +87,7 @@ namespace Lab6
                 foreach (CompilerError error in results.Errors)
                 {
                     err.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                    throw new Exception();
                 }
             }
             #endregion
