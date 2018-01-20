@@ -45,16 +45,43 @@ namespace Lab6
             GenerateInMemory = true,
             GenerateExecutable = false
         };
+        public int GetLine(string text)
+        {
+            Regex reg = new Regex("\r\n");
+            MatchCollection lines = reg.Matches(text);
+            return lines.Count+1;
+        }
         StringBuilder strb = new StringBuilder();
         public void Run()
         {
-            string text = richTextBox1.Text;
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, compil+ getStr(ref text)[1] +"public void Main(){" + getStr(ref text)[0]+"}}}");
+            string text = compil + getStr(richTextBox1.Text)[1] + "public void Main(){\r\n" + getStr(richTextBox1.Text)[0] + "\r\n}}}";
+            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, text);
+            int lineText = GetLine(text);
+            string[] masspull = text.Split('\n');
+            for (int i=0; i<masspull.Count();i++)
+            {
+                masspull[i] = masspull[i].Replace("\r", "");
+            }
+            string[] mass = richTextBox1.Text.Split('\n');
+            for (int i = 0; i < mass.Count(); i++)
+            {
+                mass[i] = mass[i].Replace("\r", "");
+               // mass[i] = mass[i].Replace("\"", "");
+            }
             if (results.Errors.HasErrors)
             {
+                int line=0;
                 foreach (CompilerError error in results.Errors)
                 {
-                    strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                        for (int k=0;k<mass.Count();k++)
+                        {
+                            if (masspull[error.Line-1] == mass[k])
+                            {
+                                line = k+1;
+                                strb.AppendLine(String.Format("Error ({0}): {1}. Ошибка в строке {2}", error.ErrorNumber, error.ErrorText, line));
+                            }
+                        }
+                    
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -102,20 +129,21 @@ namespace Lab6
             }
         
         }
-        public string[] getStr(ref string block)
+        public string[] getStr(string block)
         {
             string[] result = new string[2];
             string p = block;
 
             Regex outside = new Regex("class|void|struct|interface|delegate");
             MatchCollection mycollection = outside.Matches(block);
-            foreach (Match m in mycollection)
+           
+            while (mycollection.Count != 0)
             {
                 int check = 0;
                 int k = 0;
-                for (int i = m.Index; i <= block.Length - 1; i++)
+                for (int i = mycollection[0].Index; i <= block.Length - 1; i++)
                 {
-                    switch (block[i])
+                    switch (p[i])
                     {
                         case '{':
                             check++;
@@ -127,8 +155,9 @@ namespace Lab6
                     }
                     if ((check==0)&&(k>0))
                     {
-                        result[1] += block.Substring(m.Index, i-m.Index+1);
-                        p=p.Replace(block.Substring(m.Index, i - m.Index + 1), "");
+                        result[1] += p.Substring(mycollection[0].Index, i- mycollection[0].Index+1);
+                        p=p.Replace(p.Substring(mycollection[0].Index, i - mycollection[0].Index + 1), "");
+                        mycollection = outside.Matches(p);
                         break;
                     }
                 }
@@ -154,16 +183,13 @@ using System.IO;
 namespace Lab6 
 { 
     public class Program 
-    { 
-        interface OutPut 
+    {  
+        public static class UI
         { 
-        void Out(string x); 
-        } 
-        public class WriteText:OutPut 
-        { 
-            public void Out(string x) 
+            public static string WriteLine(string x) 
                 {
                 Console.WriteLine(x); 
+                return x;
                 }
         }
 
@@ -197,7 +223,7 @@ namespace Lab6
         Style BlueStyle = new TextStyle(Brushes.Blue, null, FontStyle.Bold);
         private void richTextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            e.ChangedRange.SetStyle(BlueStyle, @"class|void|struct|interface|delegate", RegexOptions.Multiline);
+            e.ChangedRange.SetStyle(BlueStyle, @"class|void|struct|interface|delegate|abstract|	as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
             textBox_output.Clear();
             timer.Stop();
             sec = 0;

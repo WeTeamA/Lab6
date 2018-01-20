@@ -70,12 +70,15 @@
             this.richTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.richTextBox1.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.richTextBox1.Font = new System.Drawing.Font("Courier New", 12F);
+            this.richTextBox1.IndentBackColor = System.Drawing.Color.Pink;
             this.richTextBox1.IsReplaceMode = false;
+            this.richTextBox1.LineNumberColor = System.Drawing.Color.Blue;
             this.richTextBox1.Location = new System.Drawing.Point(12, 12);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Paddings = new System.Windows.Forms.Padding(0);
             this.richTextBox1.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.richTextBox1.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("richTextBox1.ServiceColors")));
+            this.richTextBox1.ServiceLinesColor = System.Drawing.Color.OrangeRed;
             this.richTextBox1.Size = new System.Drawing.Size(816, 613);
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.WordWrapMode = FastColoredTextBoxNS.WordWrapMode.Custom;
@@ -85,7 +88,7 @@
             // textBox_output
             // 
             this.textBox_output.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.textBox_output.Font = new System.Drawing.Font("Garamond", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_output.Font = new System.Drawing.Font("Courier New", 12F);
             this.textBox_output.Location = new System.Drawing.Point(12, 631);
             this.textBox_output.Multiline = true;
             this.textBox_output.Name = "textBox_output";
