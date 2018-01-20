@@ -95,6 +95,7 @@ namespace Lab6
                 foreach (CompilerError error in results.Errors)
                 {
                     err.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                    err.AppendLine(error.Line.ToString());
                     throw new Exception();
                 }
             }
@@ -143,44 +144,37 @@ namespace Lab6
         public void CheckCodeStruct()
         {
             int Cursor = richTextBox.SelectionStart;
-
+            Code = richTextBox.Text;
             Regex OthersElements = new Regex("class |delegate |enum |interface |struct |void ");
-            MatchCollection Matches = OthersElements.Matches(richTextBox.Text);
-
-            if (Matches.Count != 0)
+            while (true)
             {
-                int lenBefore;
-                int lenAfter;
-                int len = 0;
-                Code = richTextBox.Text;
-                foreach (Match Match in Matches)
+                    MatchCollection Matches = OthersElements.Matches(Code);
+                if (Matches.Count != 0)
                 {
-                    richTextBox.SelectionStart = Match.Index; //Начальное положение курсора перед ключевым словом
-                    richTextBox.SelectionLength = Match.Length; //Длина ключевого слова
                     int k = 0; //Счетчик кавычек
-                    char[] OthersChar = new char[richTextBox.Text.Length]; //Временный массив Char для правильного аргументирования
-                    for (int i = Match.Index + Match.Length; i < richTextBox.Text.Length; i++)
+                    char[] OthersChar = new char[Code.Length]; //Временный массив Char для правильного аргументирования
+                    for (int i = Matches[0].Index + Matches[0].Length; i < Code.Length; i++)
                     {
-                        if (richTextBox.Text[i] == '{')
+                        if (Code[i] == '{')
                             k++;
-                        if (richTextBox.Text[i] == '}')
-                        { 
+                        if (Code[i] == '}')
+                        {
                             k--;
                             if (k == 0)
                             {
-                                Code.CopyTo(Match.Index - len, OthersChar, 0, i - Match.Index + 1);
-                                lenBefore = Code.Length;
-                                Code = Code.Remove(Match.Index - len, i - Match.Index + 1);
-                                lenAfter = Code.Length;
-                                len = lenBefore - lenAfter;
+                                Code.CopyTo(Matches[0].Index, OthersChar, 0, i - Matches[0].Index + 1);
+                                Code = Code.Remove(Matches[0].Index, i - Matches[0].Index + 1);
                                 OthersChar = OthersChar.Where(x => x != 0).ToArray();
                                 Others += "\r\n" + new string(OthersChar);
                                 break;
                             }
                         }
                     }
+
                 }
+                else break;
             }
+            
             richTextBox.SelectionStart = Cursor;
             richTextBox.SelectionLength = 0;
         }
