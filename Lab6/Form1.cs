@@ -13,6 +13,7 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.IO;
 using System.Text.RegularExpressions;
+using ICSharpCode.TextEditor;
 
 namespace Lab6
 {
@@ -30,6 +31,8 @@ namespace Lab6
         /// Код, который подается на компиляцию
         /// </summary>
         string CodeForCompile;
+        string Code = "";
+        string Others;
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -58,6 +61,7 @@ namespace Lab6
 
         public void Compile()
         {
+            err.Clear();
             CodeForCompile = @"using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -76,7 +80,11 @@ namespace Lab6
    {  
       public class Program
       {
-" + richTextBox.Text + @"
+        public void Main()
+         {
+" + Code + @"
+         }
+" + Others + @"
       }
    }";
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, CodeForCompile); //Получаем результат исполнения исходного кода при примененных параметрах
@@ -103,7 +111,7 @@ namespace Lab6
         }
 
         /// <summary>
-        /// Метод, подсвечивающий ключевые слова
+        /// ВО ВРЕМЯ ПЕЧАТИ КОДА подсвечивает его синтаксис
         /// </summary>
         public void CheckSyntax()
         {
@@ -124,44 +132,96 @@ namespace Lab6
                     richTextBox.SelectionLength = Match.Length;
                     richTextBox.SelectionColor = Color.LightGreen;
                 }
-                richTextBox.SelectionStart = Cursor;
-                richTextBox.SelectionLength = 0;
             }
+            richTextBox.SelectionStart = Cursor;
+            richTextBox.SelectionLength = 0;
+        }
+
+        /// <summary>
+        /// ПЕРЕД КОМПИЛЯЦИЕЙ перебрасывает все классы и т.д. за метод Main
+        /// </summary>
+        public void CheckCodeStruct()
+        {
+            int Cursor = richTextBox.SelectionStart;
+
+            Regex OthersElements = new Regex("class |delegate |enum |interface |struct |void ");
+            MatchCollection Matches = OthersElements.Matches(richTextBox.Text);
+
+            if (Matches.Count != 0)
+            {
+                int lenBefore;
+                int lenAfter;
+                int len = 0;
+                Code = richTextBox.Text;
+                foreach (Match Match in Matches)
+                {
+                    richTextBox.SelectionStart = Match.Index; //Начальное положение курсора перед ключевым словом
+                    richTextBox.SelectionLength = Match.Length; //Длина ключевого слова
+                    int k = 0; //Счетчик кавычек
+                    char[] OthersChar = new char[richTextBox.Text.Length]; //Временный массив Char для правильного аргументирования
+                    for (int i = Match.Index + Match.Length; i < richTextBox.Text.Length; i++)
+                    {
+                        if (richTextBox.Text[i] == '{')
+                            k++;
+                        if (richTextBox.Text[i] == '}')
+                        { 
+                            k--;
+                            if (k == 0)
+                            {
+                                Code.CopyTo(Match.Index - len, OthersChar, 0, i - Match.Index + 1);
+                                lenBefore = Code.Length;
+                                Code = Code.Remove(Match.Index - len, i - Match.Index + 1);
+                                lenAfter = Code.Length;
+                                len = lenBefore - lenAfter;
+                                OthersChar = OthersChar.Where(x => x != 0).ToArray();
+                                Others += "\r\n" + new string(OthersChar);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            richTextBox.SelectionStart = Cursor;
+            richTextBox.SelectionLength = 0;
+        }
+
+        /// <summary>
+        /// ПОСЛЕ КОМПИЛЯЦИИ подсвечивает строку с ошибкой, если она есть
+        /// </summary>
+        public void CheckErrors()
+        {
+
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 1)
+            if (time >= 2)
             {
                 try
                 {
                     using (StringWriter stringWriter = new StringWriter())
                     {
                         Console.SetOut(stringWriter); //Связываем консоль с объектом stringWriter
+                        CheckCodeStruct();
                         Compile();
+                        Others = "";
                         textBox_output.Text = stringWriter.ToString();
                     }
                 }
-                catch
+                 catch
                 {
                     timer.Stop();
                     time = 0;
-                    textBox_output.Clear();                 
+                    textBox_output.Clear();
                     textBox_output.Text = err.ToString();
-                    err.Clear();
+                    Others = "";
                 }
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            richTextBox.Text =
-@"public void Main()
-    {
-
-    }
-";
            compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
 
