@@ -39,15 +39,15 @@ namespace Lab6
          "System.Data.dll"
         };
 
-        static Dictionary<string, string> providerOptions = new Dictionary<string, string>
+        static Dictionary<string, string> Options = new Dictionary<string, string>
         {
             {"CompilerVersion", "v4.0"}
         };
                 
 
-        CSharpCodeProvider provider = new CSharpCodeProvider(providerOptions);
+        CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options);
 
-        CompilerParameters compilerParams = new CompilerParameters
+        CompilerParameters Params = new CompilerParameters
         {
             GenerateInMemory = true,
             GenerateExecutable = false
@@ -55,6 +55,7 @@ namespace Lab6
         StringBuilder strb = new StringBuilder();
         public void Compile()
         {
+
             code = @"using System; 
 using System.Collections.Generic; 
 using System.ComponentModel; 
@@ -87,13 +88,19 @@ Console.WriteLine(x);
 static ui UI = new ui();
 
         " + textBox_input.Text + "    }}";
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code);
+            CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
 
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError error in results.Errors)
                 {
                     strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                    int colomn = error.Column;
+                    Regex reg = new Regex(@"\n");
+                    MatchCollection mycol = reg.Matches(textBox_input.Text);
+                    textBox_input.SelectionStart = mycol[colomn - 1].Index +1;
+                    textBox_input.SelectionLength = mycol[colomn].Index - mycol[colomn - 1].Index - 1;
+                    textBox_input.SelectionColor = Color.Red;
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -144,6 +151,7 @@ static ui UI = new ui();
                     time = 0;
                     textBox_output.Clear();                 
                     textBox_output.Text = strb.ToString();
+                    
                     strb.Clear();
                 }
             }
@@ -182,7 +190,8 @@ static ui UI = new ui();
 {
 //Используйте UI.WriteLine(string) для вывода
 }";
-            compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
+            Params.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
+         
     }
 }
