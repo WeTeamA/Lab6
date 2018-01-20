@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.textBox_output = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.richTextBox = new System.Windows.Forms.RichTextBox();
+            this.richTextBox = new FastColoredTextBoxNS.FastColoredTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.richTextBox)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox_output
@@ -53,15 +55,36 @@
             // 
             // richTextBox
             // 
+            this.richTextBox.AutoCompleteBracketsList = new char[] {
+        '(',
+        ')',
+        '{',
+        '}',
+        '[',
+        ']',
+        '\"',
+        '\"',
+        '\'',
+        '\''};
+            this.richTextBox.AutoScrollMinSize = new System.Drawing.Size(27, 14);
+            this.richTextBox.BackBrush = null;
             this.richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.richTextBox.Font = new System.Drawing.Font("Consolas", 10F);
-            this.richTextBox.ForeColor = System.Drawing.SystemColors.MenuBar;
+            this.richTextBox.CharHeight = 14;
+            this.richTextBox.CharWidth = 8;
+            this.richTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.richTextBox.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.richTextBox.Font = new System.Drawing.Font("Courier New", 9.75F);
+            this.richTextBox.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.richTextBox.IsReplaceMode = false;
             this.richTextBox.Location = new System.Drawing.Point(0, -1);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(721, 432);
-            this.richTextBox.TabIndex = 2;
-            this.richTextBox.Text = "";
-            this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
+            this.richTextBox.Paddings = new System.Windows.Forms.Padding(0);
+            this.richTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.richTextBox.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("richTextBox.ServiceColors")));
+            this.richTextBox.Size = new System.Drawing.Size(721, 423);
+            this.richTextBox.TabIndex = 3;
+            this.richTextBox.Zoom = 100;
+            this.richTextBox.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.richTextBox_TextChanged);
             // 
             // Form1
             // 
@@ -75,6 +98,7 @@
             this.ShowIcon = false;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.richTextBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -83,7 +107,7 @@
         #endregion
         private System.Windows.Forms.TextBox textBox_output;
         private System.Windows.Forms.Timer timer;
-        private System.Windows.Forms.RichTextBox richTextBox;
+        private FastColoredTextBoxNS.FastColoredTextBox richTextBox;
     }
 }
 

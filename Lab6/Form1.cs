@@ -14,6 +14,7 @@ using Microsoft.CSharp;
 using System.IO;
 using System.Text.RegularExpressions;
 using ICSharpCode.TextEditor;
+using FastColoredTextBoxNS;
 
 namespace Lab6
 {
@@ -106,6 +107,7 @@ namespace Lab6
                             break;
                         }
                     }
+                    count++;
                     err.AppendLine("Ошибка в строке номер: " + count.ToString());
                 }
                 throw new Exception();
@@ -245,9 +247,11 @@ namespace Lab6
            compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
 
-        private void richTextBox_TextChanged(object sender, EventArgs e)
+        private void richTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CheckSyntax();
+            Style GreenStyle = new TextStyle(Brushes.LightGreen, null, FontStyle.Bold);
+            e.ChangedRange.SetStyle(GreenStyle, @"class|void|struct|interface|delegate|abstract| as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+            //CheckSyntax();
             timer.Stop();
             time = 0;
             timer.Start();
