@@ -87,17 +87,28 @@ namespace Lab6
 " + Others + @"
       }
    }";
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, CodeForCompile); //Получаем результат исполнения исходного кода при примененных параметрах
-            
-            #region Отлов ошибок
+            RichTextBox Box = new RichTextBox();
+            Box.Text = CodeForCompile;
+            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, Box.Text); //Получаем результат исполнения исходного кода при примененных параметрах
+
+            #region Отлов ошибок (Тут надо исправить, чтобы линия с ошибкой определялась однозначно)
             if (results.Errors.HasErrors)
             {
+                int count = 0;
                 foreach (CompilerError error in results.Errors)
                 {
                     err.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
-                    err.AppendLine(error.Line.ToString());
-                    throw new Exception();
+                    for (int i = 0; i < richTextBox.Lines.Count(); i++)
+                    {
+                        if (Box.Lines[error.Line-1] == richTextBox.Lines[i])
+                        { 
+                            count = i;
+                            break;
+                        }
+                    }
+                    err.AppendLine("Ошибка в строке номер: " + count.ToString());
                 }
+                throw new Exception();
             }
             #endregion
 
@@ -143,48 +154,63 @@ namespace Lab6
         /// </summary>
         public void CheckCodeStruct()
         {
-            int Cursor = richTextBox.SelectionStart;
-            Code = richTextBox.Text;
-            Regex OthersElements = new Regex("class |delegate |enum |interface |struct |void ");
-            while (true)
+            if (CheckStruct() == true)
             {
-                    MatchCollection Matches = OthersElements.Matches(Code);
-                if (Matches.Count != 0)
+                int Cursor = richTextBox.SelectionStart;
+                Code = richTextBox.Text;
+                Regex OthersElements = new Regex("class |delegate |enum |interface |struct |void ");
+                while (true)
                 {
-                    int k = 0; //Счетчик кавычек
-                    char[] OthersChar = new char[Code.Length]; //Временный массив Char для правильного аргументирования
-                    for (int i = Matches[0].Index + Matches[0].Length; i < Code.Length; i++)
+                    MatchCollection Matches = OthersElements.Matches(Code);
+                    if (Matches.Count != 0)
                     {
-                        if (Code[i] == '{')
-                            k++;
-                        if (Code[i] == '}')
+                        int k = 0; //Счетчик кавычек
+                        char[] OthersChar = new char[Code.Length]; //Временный массив Char для правильного аргументирования
+                        for (int i = Matches[0].Index + Matches[0].Length; i < Code.Length; i++)
                         {
-                            k--;
-                            if (k == 0)
+                            if (Code[i] == '{')
+                                k++;
+                            if (Code[i] == '}')
                             {
-                                Code.CopyTo(Matches[0].Index, OthersChar, 0, i - Matches[0].Index + 1);
-                                Code = Code.Remove(Matches[0].Index, i - Matches[0].Index + 1);
-                                OthersChar = OthersChar.Where(x => x != 0).ToArray();
-                                Others += "\r\n" + new string(OthersChar);
-                                break;
+                                k--;
+                                if (k == 0)
+                                {
+                                    Code.CopyTo(Matches[0].Index, OthersChar, 0, i - Matches[0].Index + 1);
+                                    Code = Code.Remove(Matches[0].Index, i - Matches[0].Index + 1);
+                                    OthersChar = OthersChar.Where(x => x != 0).ToArray();
+                                    Others += "\r\n" + new string(OthersChar);
+                                    break;
+                                }
                             }
                         }
-                    }
 
+                    }
+                    else break;
                 }
-                else break;
+                richTextBox.SelectionStart = Cursor;
+                richTextBox.SelectionLength = 0;
             }
-            
-            richTextBox.SelectionStart = Cursor;
-            richTextBox.SelectionLength = 0;
         }
 
         /// <summary>
         /// ПОСЛЕ КОМПИЛЯЦИИ подсвечивает строку с ошибкой, если она есть
         /// </summary>
-        public void CheckErrors()
+        public bool CheckStruct()
         {
-
+            int k = 0;
+            for (int i = 0; i < Code.Length; i++)
+            {
+                if (Code[i] == '{')
+                    k++;
+                if (Code[i] == '}')
+                {
+                    k--;
+                }
+            }
+            if (k == 0)
+                return true;
+            else
+                return false;
         }
 
         private void timer_Tick(object sender, EventArgs e)
