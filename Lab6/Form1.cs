@@ -13,6 +13,7 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.IO;
 using System.Text.RegularExpressions;
+using FastColoredTextBoxNS;
 
 namespace Lab6
 {
@@ -30,6 +31,10 @@ namespace Lab6
         /// Текст компилируемого кода
         /// </summary>
         string code;
+        /// <summary>
+        /// Стиль текста кода
+        /// </summary>
+        Style CodeStyle = new TextStyle(Brushes.Blue, null, FontStyle.Regular);
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -87,7 +92,7 @@ Console.WriteLine(x);
 }
 static ui UI = new ui();
 
-        " + textBox_input.Text + "    }}";
+        " + fastColoredTextBox1.Text + "    }}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
 
             if (results.Errors.HasErrors)
@@ -97,10 +102,10 @@ static ui UI = new ui();
                     strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
                     int colomn = error.Column;
                     Regex reg = new Regex(@"\n");
-                    MatchCollection mycol = reg.Matches(textBox_input.Text);
-                    textBox_input.SelectionStart = mycol[colomn - 1].Index +1;
-                    textBox_input.SelectionLength = mycol[colomn].Index - mycol[colomn - 1].Index - 1;
-                    textBox_input.SelectionColor = Color.Red;
+                    MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
+                    fastColoredTextBox1.SelectionStart = mycol[colomn - 1].Index +1;
+                    fastColoredTextBox1.SelectionLength = mycol[colomn].Index - mycol[colomn - 1].Index - 1;
+                    fastColoredTextBox1.SelectionColor = Color.Red;
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -157,41 +162,23 @@ static ui UI = new ui();
             }
         }
 
-        private void textBox_input_TextChanged(object sender, EventArgs e)
-        {
-            int cur = textBox_input.SelectionStart;
-            textBox_output.Clear();
-            timer.Stop();
-            time = 0;
-            timer.Start();
-            Regex reg = new Regex(@"string|break|var|foreach|for|new|while|if |int |in |else|return|object|until|sbyte|shor|object|true|false|ushor|switch|case|null|long |ulong |float |double |char |bool |decimal |public|private|protected|void|static|delegate|enum|new|class\s[A-z,0-9]{1,10}|struct\s[A-z,0-9]{1,10}|interface\s[A-z,0-9]{1,10}|const");
-            MatchCollection mycol = reg.Matches(textBox_input.Text);
-
-
-            if (mycol.Count != 0)
-            {
-                foreach (Match m in mycol)
-                {
-                    textBox_input.SelectionStart = m.Index;
-                    textBox_input.SelectionLength = m.Length;
-                    textBox_input.SelectionColor = Color.Blue;
-                }
-
-                textBox_input.SelectionStart = cur;
-                textBox_input.SelectionLength = 0;
-                textBox_input.SelectionColor = Color.Black;
-            }
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox_input.Text =
+            fastColoredTextBox1.Text =
 @"public void Main()
 {
 //Используйте UI.WriteLine(string) для вывода
 }";
             Params.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
-         
+
+        private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           // e.ChangedRange.SetStyle(CodeStyle, @"class|void|struct|interface|delegate|abstract|	as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+            textBox_output.Clear();
+            timer.Stop();
+            time = 0;
+            timer.Start();
+        }
     }
 }
