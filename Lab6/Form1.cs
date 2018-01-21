@@ -78,6 +78,10 @@ static ui UI = new ui();
         /// Код внутри метода Main
         /// </summary>
         string MainCode = "";
+        /// <summary>
+        /// Код внутри метода Main
+        /// </summary>
+        string ArterCode = "";
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -104,7 +108,8 @@ static ui UI = new ui();
         public void Compile()
         {
             CorrectCompile();
-            code = BeforeCode + MainCode;
+            code = BeforeCode + @"public void Main()
+            {" + MainCode + @"}" + ArterCode + @"}}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
             fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
             //Place beg = new Place(1,1);
@@ -190,7 +195,8 @@ static ui UI = new ui();
                     if (index[i - 1] < mycol[i].Index)
                     {
                         index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-
+                        ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
+                        MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
                         i++;
                     }
                     else
@@ -201,7 +207,7 @@ static ui UI = new ui();
                 if (index.Count == 0)
                 {
                     index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-                    BeforeCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
+                    ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
                     MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
                     i++;
                 }
@@ -239,24 +245,6 @@ static ui UI = new ui();
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            fastColoredTextBox1.Text =
-@"int[] m = {9, 8, 7, 6, 5, 4, 3, 2, 1}
-void Sort(int[] array)
-{
-  for (int x = 0; x < array.Length; x++)
-  {
-    int minindex = x;
-    for (int y = x+1; y < array.Length; y++)
-      if (array[minindex] > array[y])
-        minindex = y;
-    int tmp = array[x];
-    array[x] = array[minindex];
-    array[minindex] = tmp;
-  }
-}
-Sort(m);
-string s = "";
-foreach (int x in m) S += m.ToString()+;";
             Params.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
 
