@@ -34,7 +34,11 @@ namespace Lab6
         /// <summary>
         /// Стиль ошибок текста
         /// </summary>
-        Style ErrorCodeStyle = new TextStyle(Brushes.Black, Brushes.LightPink, FontStyle.Bold);
+        Style ErrorCodeStyle = new TextStyle(Brushes.Black, Brushes.LightPink, FontStyle.Regular);
+        /// <summary>
+        /// Стиль ошибок текста
+        /// </summary>
+        Style CodeStyle = new TextStyle(Brushes.Black, Brushes.Honeydew, FontStyle.Regular);
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -94,6 +98,11 @@ static ui UI = new ui();
 
         " + fastColoredTextBox1.Text + "    }}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
+            fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
+            //Place beg = new Place(1,1);
+            // Place end = new Place(1, );
+            //Range tbrng = new Range(fastColoredTextBox1, Place );
+            // tbrng.SetStyle(CodeStyle);
 
             if (results.Errors.HasErrors)
             {
@@ -122,6 +131,11 @@ static ui UI = new ui();
             info.Invoke(obj, null);
             string result = sw.ToString();
             textBox_output.Text += result;
+        }
+
+        public void CorrectCompile()
+        {
+
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -162,12 +176,13 @@ static ui UI = new ui();
 
         private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //e.ChangedRange.SetStyle(BlueStyle, @"class|void|struct|interface|delegate|abstract| as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+
 
             textBox_output.Clear();
             timer.Stop();
             time = 0;
             timer.Start();
+            e.ChangedRange
         }
     }
 }
