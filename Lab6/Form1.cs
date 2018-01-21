@@ -99,8 +99,8 @@ static ui UI = new ui();
             {
                 foreach (CompilerError error in results.Errors)
                 {
-                    strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));                    
                     int Line = error.Line - 31;
+                    strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
                     Range rng = new Range(fastColoredTextBox1, Line - 1);
                     rng.SetStyle(ErrorCodeStyle);
                 }
