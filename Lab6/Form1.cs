@@ -196,8 +196,8 @@ static ui UI = new ui();
                     if (index[i - 1] < mycol[i].Index)
                     {
                         index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-                        ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
-                        MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
+                        ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index + 1);
+                        MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index + 1);
                         i++;
                     }
                     else
@@ -209,7 +209,7 @@ static ui UI = new ui();
                 {
                     index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
                     ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index , index[i] - mycol[i].Index + 1 ) + "\n";
-                    MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index );
+                    MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index + 1);
                     i++;
                 }
             }
