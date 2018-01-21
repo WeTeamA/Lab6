@@ -62,7 +62,6 @@ namespace Lab6
 
         public void Compile()
         {
-            //err.Clear();
             CodeForCompile = @"using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -108,7 +107,7 @@ namespace Lab6
                         }
                     }
                     count++;
-                    err.AppendLine("Ошибка в строке номер: " + count.ToString());
+                    err.AppendLine("Ошибка в строке/символе: " + count.ToString() + "/" + error.Column.ToString());
                 }
                 throw new Exception();
             }
