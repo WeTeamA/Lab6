@@ -32,9 +32,9 @@ namespace Lab6
         /// </summary>
         string code;
         /// <summary>
-        /// Стиль текста кода
+        /// Стиль ошибок текста
         /// </summary>
-        Style CodeStyle = new TextStyle(Brushes.Blue, null, FontStyle.Regular);
+        SelectionStyle ErrorCodeStyle = new SelectionStyle(null, Brushes.Red);
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -101,10 +101,12 @@ static ui UI = new ui();
                 {
                     strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
                     int colomn = error.Column;
-                    Regex reg = new Regex(@"\n");
+                    Regex reg = new Regex(@"\r\n");
                     MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
-                    fastColoredTextBox1.SelectionStart = mycol[colomn - 1].Index +1;
-                    fastColoredTextBox1.SelectionLength = mycol[colomn].Index - mycol[colomn - 1].Index - 1;
+                    int begin = mycol[colomn - 3].Index + 2;
+                    int end = mycol[colomn - 2].Index - mycol[colomn - 3].Index - 1;
+                    fastColoredTextBox1.SelectionStart = begin;
+                    fastColoredTextBox1.SelectionLength = end;
                     fastColoredTextBox1.SelectionColor = Color.Red;
                 }
                 throw new InvalidOperationException(strb.ToString());
@@ -174,7 +176,7 @@ static ui UI = new ui();
 
         private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
-           // e.ChangedRange.SetStyle(CodeStyle, @"class|void|struct|interface|delegate|abstract|	as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+            //e.ChangedRange.SetStyle(CodeStyle, @"class|void|struct|interface|delegate|abstract|	as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
             textBox_output.Clear();
             timer.Stop();
             time = 0;
