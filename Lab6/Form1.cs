@@ -107,6 +107,7 @@ static ui UI = new ui();
         StringBuilder strb = new StringBuilder();
         public void Compile()
         {
+            ArterCode = "";
             CorrectCompile();
             code = BeforeCode + @"public void Main()
             {" + "\n" + MainCode + @"}" + "\n" +  ArterCode + @"}}";
