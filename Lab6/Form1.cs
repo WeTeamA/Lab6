@@ -95,7 +95,7 @@ static ui UI = new ui();
         {
             {"CompilerVersion", "v4.0"}
         };
-                
+
 
         CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options);
 
@@ -109,7 +109,7 @@ static ui UI = new ui();
         {
             CorrectCompile();
             code = BeforeCode + @"public void Main()
-            {" + MainCode + @"}" + ArterCode + @"}}";
+            {" + "\n" + MainCode + @"}" + "\n" +  ArterCode + @"}}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
             fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
             //Place beg = new Place(1,1);
