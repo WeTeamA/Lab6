@@ -34,7 +34,7 @@ namespace Lab6
         /// <summary>
         /// Стиль ошибок текста
         /// </summary>
-        SelectionStyle ErrorCodeStyle = new SelectionStyle(null, Brushes.Red);
+        Style ErrorCodeStyle = new TextStyle(Brushes.Black, Brushes.LightPink, FontStyle.Bold);
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -99,23 +99,10 @@ static ui UI = new ui();
             {
                 foreach (CompilerError error in results.Errors)
                 {
-                    strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
-                    
+                    strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));                    
                     int Line = error.Line - 31;
-                    Regex reg = new Regex(@"\r\n");
-                    MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
-                    int begin = mycol[Line - 2].Index + 2;
-                    int end = mycol[Line - 1].Index - mycol[Line - 2].Index - 1;
-                    fastColoredTextBox1.SelectionStart = begin;
-                    fastColoredTextBox1.SelectionLength = end;
-                    fastColoredTextBox1.SelectionColor = Color.Red;
-                    fastColoredTextBox1.Text = fastColoredTextBox1.Text;
-                    //string errortext = fastColoredTextBox1.SelectedText;
-                    //errortext.
-                    //fastColoredTextBox1.Text.Insert();
-
-                    
-                    
+                    Range rng = new Range(fastColoredTextBox1, Line - 1);
+                    rng.SetStyle(ErrorCodeStyle);
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -144,15 +131,6 @@ static ui UI = new ui();
             {
                 try
                 {
-                    
-                    // var sw = new StringWriter();
-                    // TextWriter sww = Console.Out;
-                    //  Console.SetOut(sw);
-                    // Console.SetError(sw);
-                    //Console.SetCursorPosition(0, 0);
-                    // textBox_output.Text = Console.ReadLine();
-                    //Console.WriteLine("You are travelling north at a speed of 10m/s");
-
                     using (StringWriter stringWriter = new StringWriter())
                     {
                         Console.SetOut(stringWriter);
@@ -184,7 +162,8 @@ static ui UI = new ui();
 
         private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //e.ChangedRange.SetStyle(CodeStyle, @"class|void|struct|interface|delegate|abstract|	as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+            //e.ChangedRange.SetStyle(BlueStyle, @"class|void|struct|interface|delegate|abstract| as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+
             textBox_output.Clear();
             timer.Stop();
             time = 0;
