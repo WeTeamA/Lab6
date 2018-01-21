@@ -100,14 +100,22 @@ static ui UI = new ui();
                 foreach (CompilerError error in results.Errors)
                 {
                     strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
-                    int colomn = error.Column;
+                    
+                    int Line = error.Line - 31;
                     Regex reg = new Regex(@"\r\n");
                     MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
-                    int begin = mycol[colomn - 3].Index + 2;
-                    int end = mycol[colomn - 2].Index - mycol[colomn - 3].Index - 1;
+                    int begin = mycol[Line - 2].Index + 2;
+                    int end = mycol[Line - 1].Index - mycol[Line - 2].Index - 1;
                     fastColoredTextBox1.SelectionStart = begin;
                     fastColoredTextBox1.SelectionLength = end;
                     fastColoredTextBox1.SelectionColor = Color.Red;
+                    fastColoredTextBox1.Text = fastColoredTextBox1.Text;
+                    //string errortext = fastColoredTextBox1.SelectedText;
+                    //errortext.
+                    //fastColoredTextBox1.Text.Insert();
+
+                    
+                    
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
