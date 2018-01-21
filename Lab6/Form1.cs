@@ -62,7 +62,7 @@ namespace Lab6
 
         public void Compile()
         {
-            err.Clear();
+            //err.Clear();
             CodeForCompile = @"using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -192,6 +192,7 @@ namespace Lab6
                 richTextBox.SelectionStart = Cursor;
                 richTextBox.SelectionLength = 0;
             }
+            else err.AppendLine("Где-то пропущена скобка '}' или '{'");
         }
 
         /// <summary>
@@ -200,15 +201,15 @@ namespace Lab6
         public bool CheckStruct()
         {
             int k = 0;
-            for (int i = 0; i < Code.Length; i++)
-            {
-                if (Code[i] == '{')
-                    k++;
-                if (Code[i] == '}')
+                for (int i = 0; i < richTextBox.Text.Length; i++)
                 {
-                    k--;
+                    if (richTextBox.Text[i] == '{')
+                        k++;
+                    if (richTextBox.Text[i] == '}')
+                    {
+                        k--;
+                    }
                 }
-            }
             if (k == 0)
                 return true;
             else
@@ -224,9 +225,13 @@ namespace Lab6
                 {
                     using (StringWriter stringWriter = new StringWriter())
                     {
+                        err.Clear();
                         Console.SetOut(stringWriter); //Связываем консоль с объектом stringWriter
                         CheckCodeStruct();
-                        Compile();
+                        if (err.Length == 0)
+                            Compile();
+                        else
+                            throw new Exception();
                         Others = "";
                         textBox_output.Text = stringWriter.ToString();
                     }
@@ -249,9 +254,6 @@ namespace Lab6
 
         private void richTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-           // Style GreenStyle = new TextStyle(Brushes.LightGreen, null, FontStyle.Bold);
-           // e.ChangedRange.SetStyle(GreenStyle, @"class|void|struct|interface|delegate|abstract| as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
-            //CheckSyntax();
             timer.Stop();
             time = 0;
             timer.Start();
