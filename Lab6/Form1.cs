@@ -81,7 +81,7 @@ static ui UI = new ui();
         /// <summary>
         /// Код внутри метода Main
         /// </summary>
-        string ArterCode = "";
+        string ArterCode;
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -207,8 +207,8 @@ static ui UI = new ui();
                 if (index.Count == 0)
                 {
                     index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-                    ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index );
-                    MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
+                    ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index , index[i] - mycol[i].Index + 1 ) + "\n";
+                    MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index );
                     i++;
                 }
             }
@@ -220,7 +220,7 @@ static ui UI = new ui();
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 2)
+            if (time >= 1)
             {
                 try
                 {
@@ -250,8 +250,6 @@ static ui UI = new ui();
 
         private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
-
-            CorrectCompile();
             textBox_output.Clear();
             timer.Stop();
             time = 0;
