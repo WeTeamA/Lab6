@@ -1,0 +1,18 @@
+class Writing 
+{
+public void Write()
+{
+Console.WriteLine("Привет, это работет!");
+}
+}
+
+Writing write = new Writing();
+write.Write();
+
+class Wrote
+{
+public void Write()
+{
+Console.WriteLine("Тоже работает!");
+}
+}

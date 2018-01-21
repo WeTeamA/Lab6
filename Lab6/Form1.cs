@@ -249,8 +249,8 @@ namespace Lab6
 
         private void richTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Style GreenStyle = new TextStyle(Brushes.LightGreen, null, FontStyle.Bold);
-            e.ChangedRange.SetStyle(GreenStyle, @"class|void|struct|interface|delegate|abstract| as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
+           // Style GreenStyle = new TextStyle(Brushes.LightGreen, null, FontStyle.Bold);
+           // e.ChangedRange.SetStyle(GreenStyle, @"class|void|struct|interface|delegate|abstract| as|base|bool|break|byte|case|catch|char|checked|const|continue|decimal|defaultdo|double|else|enum|event|false|finally|fixed|float|for |foreach|if|implicit|array|int|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|volatile|var|", RegexOptions.Multiline);
             //CheckSyntax();
             timer.Stop();
             time = 0;

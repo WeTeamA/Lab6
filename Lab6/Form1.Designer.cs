@@ -66,20 +66,29 @@
         '\"',
         '\'',
         '\''};
+            this.richTextBox.AutoIndentCharsPatterns = "\n^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\n^\\s*(case|default)\\s*[^:]*(" +
+    "?<range>:)\\s*(?<range>[^;]+);\n";
             this.richTextBox.AutoScrollMinSize = new System.Drawing.Size(27, 14);
             this.richTextBox.BackBrush = null;
-            this.richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.richTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.richTextBox.BracketsHighlightStrategy = FastColoredTextBoxNS.BracketsHighlightStrategy.Strategy2;
             this.richTextBox.CharHeight = 14;
             this.richTextBox.CharWidth = 8;
             this.richTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.richTextBox.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.richTextBox.Font = new System.Drawing.Font("Courier New", 9.75F);
-            this.richTextBox.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.richTextBox.ForeColor = System.Drawing.SystemColors.InfoText;
             this.richTextBox.IsReplaceMode = false;
+            this.richTextBox.Language = FastColoredTextBoxNS.Language.CSharp;
+            this.richTextBox.LeftBracket = '(';
+            this.richTextBox.LeftBracket2 = '{';
             this.richTextBox.Location = new System.Drawing.Point(0, -1);
             this.richTextBox.Name = "richTextBox";
+            this.richTextBox.PaddingBackColor = System.Drawing.Color.DimGray;
             this.richTextBox.Paddings = new System.Windows.Forms.Padding(0);
-            this.richTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.richTextBox.RightBracket = ')';
+            this.richTextBox.RightBracket2 = '}';
+            this.richTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.richTextBox.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("richTextBox.ServiceColors")));
             this.richTextBox.Size = new System.Drawing.Size(721, 423);
             this.richTextBox.TabIndex = 3;
