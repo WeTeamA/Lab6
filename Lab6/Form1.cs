@@ -122,6 +122,7 @@ static ui UI = new ui();
             {
                 foreach (CompilerError error in results.Errors)
                 {
+                    //string S = error.
                     int Line = error.Line - 32;
                     strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
                     Range rng = new Range(fastColoredTextBox1, Line - 1);
@@ -162,7 +163,7 @@ static ui UI = new ui();
             int j = bindex + 1;
             if (bindex < mycolb.Count)
             {
-                while (mycolb[j].Index > mycolb[eindex].Index)
+                while (mycolb[j].Index < mycole[eindex].Index)
                 {
                     eindex++;
                     if (j < mycolb.Count - 1)
@@ -181,7 +182,7 @@ static ui UI = new ui();
         public void CorrectCompile()
         {
             MainCode = fastColoredTextBox1.Text;
-            Regex reg = new Regex(@"\w+\s+\w+[(].*[)]|struct|class|interface|delegate");
+            Regex reg = new Regex(@"\w+\s+\w+[(].*[)]\s*[{]|struct|class|interface|delegate");
             MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
             Regex regb = new Regex(@"[{]");
             MatchCollection mycolb = regb.Matches(fastColoredTextBox1.Text);
@@ -193,7 +194,7 @@ static ui UI = new ui();
             {
                 if (i != 0)
                 {
-                    if (index[i - 1] < mycol[i].Index)
+                    if (index[index.Count - 1]  < mycol[i].Index)
                     {
                         index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
                         ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index + 1);
