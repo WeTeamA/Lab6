@@ -207,7 +207,7 @@ static ui UI = new ui();
                 if (index.Count == 0)
                 {
                     index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-                    ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
+                    ArterCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index );
                     MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
                     i++;
                 }

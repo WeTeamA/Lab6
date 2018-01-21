@@ -138,6 +138,27 @@
         CgAAAAAAAAAAjQABAAH4/////P///woAAAAAAAAAAKQAAQAB9/////z///8KAAAAAAAAAACWAAEACw==
 </value>
   </data>
+  <data name="fastColoredTextBox1.Text" xml:space="preserve">
+    <value>int[] m = {9, 8, 7, 6, 5, 4, 3, 2, 1}
+void Sort(int[] array)
+{
+  for (int x = 0; x &lt; array.Length; x++)
+  {
+    int minindex = x;
+    for (int y = x+1; y &lt; array.Length; y++)
+      if (array[minindex] &gt; array[y])
+        minindex = y;
+    int tmp = array[x];
+    array[x] = array[minindex];
+    array[minindex] = tmp;
+  }
+}
+Sort(m);
+string s = "";
+foreach (int x in m) S += m.ToString()+" ";
+UI.WriteLine(s);
+</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
