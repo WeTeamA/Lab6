@@ -110,7 +110,7 @@ static ui UI = new ui();
             ArterCode = "";
             CorrectCompile();
             code = BeforeCode + @"public void Main()
-            {" + "\n" + MainCode + @"}" + "\n" +  ArterCode + @"}}";
+            {" + "\r\n" + MainCode + "\r\n" +  @"}" + "\n" +  ArterCode + "\r\n" + @"}}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
             fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
             //Place beg = new Place(1,1);
@@ -122,11 +122,14 @@ static ui UI = new ui();
             {
                 foreach (CompilerError error in results.Errors)
                 {
-                    //string S = error.
-                    int Line = error.Line - 32;
-                    strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
-                    Range rng = new Range(fastColoredTextBox1, Line - 1);
-                    rng.SetStyle(ErrorCodeStyle);
+                    Regex reg = new Regex(@"\r\n");
+                    MatchCollection lines = reg.Matches(code);
+                    string errorline = code.Substring(lines[error.Line - 2].Index + 2, lines[error.Line - 1].Index - lines[error.Line - 2].Index - 2);
+                    Regex regb = new Regex(errorline);
+                    MatchCollection finds = regb.Matches(code);
+                    //strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
+                    Range rng = new Range(fastColoredTextBox1, 5);
+                    //rng.SetStyle(ErrorCodeStyle);
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -189,6 +192,7 @@ static ui UI = new ui();
             Regex rege = new Regex(@"[}]");
             MatchCollection mycole = rege.Matches(fastColoredTextBox1.Text);
             List<int> index = new List<int>();
+            int delet = 0;
             int i = 0;
             while(i < mycol.Count )
             {
@@ -198,7 +202,8 @@ static ui UI = new ui();
                     {
                         index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
                         ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
-                        MainCode = MainCode.Remove(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
+                        MainCode = MainCode.Remove(mycol[i].Index - delet, index[index.Count - 1] - mycol[i].Index + 1);
+                        delet += index[index.Count - 1] - mycol[i].Index + 1;
                         i++;
                     }
                     else
@@ -211,6 +216,7 @@ static ui UI = new ui();
                     index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
                     ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index , index[index.Count - 1] - mycol[i].Index + 1 ) + "\n";
                     MainCode = MainCode.Remove(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
+                    delet += index[index.Count - 1] - mycol[i].Index + 1;
                     i++;
                 }
             }
