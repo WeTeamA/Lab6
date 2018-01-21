@@ -43,6 +43,10 @@ namespace Lab6
         /// Объявление классов, методов, делегатов, интерфейсов и структур
         /// </summary>
         string BeforeCode = "";
+        /// <summary>
+        /// Код внутри метода Main
+        /// </summary>
+        string MainCode = "";
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -170,6 +174,7 @@ static ui UI = new ui();
 
         public void CorrectCompile()
         {
+            MainCode = fastColoredTextBox1.Text;
             Regex reg = new Regex(@"\w+\s+\w+[(].*[)]|struct|class|interface|delegate");
             MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
             Regex regb = new Regex(@"[{]");
@@ -184,7 +189,8 @@ static ui UI = new ui();
                 {
                     if (index[i - 1] < mycol[i].Index)
                     {
-                        index.Add(mycolb[FindIndex(mycol, mycolb, mycole, i)].Index);
+                        index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
+
                         i++;
                     }
                     else
@@ -194,11 +200,14 @@ static ui UI = new ui();
                 }
                 if (index.Count == 0)
                 {
-                    index.Add(mycolb[FindIndex(mycol, mycolb, mycole, i)].Index);
+                    index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
+                    BeforeCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
+                    MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
                     i++;
                 }
             }
-            BeforeCode += fastColoredTextBox1.Text.Clone();
+
+
             int a = 5;
         }
 
