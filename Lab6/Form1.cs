@@ -39,6 +39,10 @@ namespace Lab6
         /// Стиль ошибок текста
         /// </summary>
         Style CodeStyle = new TextStyle(Brushes.Black, Brushes.Honeydew, FontStyle.Regular);
+        /// <summary>
+        /// Объявление классов, методов, делегатов, интерфейсов и структур
+        /// </summary>
+        string BeforeCode = "";
         string[] dll = new string[]
         {"System.dll",
          "System.Linq.dll",
@@ -133,9 +137,69 @@ static ui UI = new ui();
             textBox_output.Text += result;
         }
 
+        public int FindIndex(MatchCollection mycol, MatchCollection mycolb, MatchCollection mycole, int i)
+        {
+            int bindex = 0;
+            int eindex = 0;
+            while (mycol[i].Index > mycolb[bindex].Index)
+            {
+                bindex++;
+            }
+            while (mycol[i].Index > mycole[eindex].Index)
+            {
+                eindex++;
+            }
+            int j = bindex + 1;
+            if (bindex < mycolb.Count)
+            {
+                while (mycolb[j].Index > mycolb[eindex].Index)
+                {
+                    eindex++;
+                    if (j < mycolb.Count - 1)
+                    {
+                        j++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return eindex;
+        }
+
         public void CorrectCompile()
         {
-
+            Regex reg = new Regex(@"\w+\s+\w+[(].*[)]|struct|class|interface|delegate");
+            MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
+            Regex regb = new Regex(@"[{]");
+            MatchCollection mycolb = regb.Matches(fastColoredTextBox1.Text);
+            Regex rege = new Regex(@"[}]");
+            MatchCollection mycole = rege.Matches(fastColoredTextBox1.Text);
+            List<int> index = new List<int>();
+            int i = 0;
+            while(i < mycol.Count )
+            {
+                if (i != 0)
+                {
+                    if (index[i - 1] < mycol[i].Index)
+                    {
+                        index.Add(mycolb[FindIndex(mycol, mycolb, mycole, i)].Index);
+                        i++;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                if (index.Count == 0)
+                {
+                    index.Add(mycolb[FindIndex(mycol, mycolb, mycole, i)].Index);
+                    i++;
+                }
+            }
+            BeforeCode += fastColoredTextBox1.Text.Clone();
+            int a = 5;
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -167,22 +231,35 @@ static ui UI = new ui();
         private void Form1_Load(object sender, EventArgs e)
         {
             fastColoredTextBox1.Text =
-@"public void Main()
+@"int[] m = {9, 8, 7, 6, 5, 4, 3, 2, 1}
+void Sort(int[] array)
 {
-//Используйте UI.WriteLine(string) для вывода
-}";
+  for (int x = 0; x < array.Length; x++)
+  {
+    int minindex = x;
+    for (int y = x+1; y < array.Length; y++)
+      if (array[minindex] > array[y])
+        minindex = y;
+    int tmp = array[x];
+    array[x] = array[minindex];
+    array[minindex] = tmp;
+  }
+}
+Sort(m);
+string s = "";
+foreach (int x in m) S += m.ToString()+;";
             Params.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
 
         private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
 
-
+            CorrectCompile();
             textBox_output.Clear();
             timer.Stop();
             time = 0;
             timer.Start();
-            e.ChangedRange
+            //We.ChangedRange
         }
     }
 }
