@@ -43,14 +43,14 @@ namespace Lab6
          "System.Data.dll"
         };
 
-        static Dictionary<string, string> providerOptions = new Dictionary<string, string>
+        static Dictionary<string, string> CompilerOptions = new Dictionary<string, string>
         {
             {"CompilerVersion", "v4.0"}
         };
 
-        CSharpCodeProvider provider = new CSharpCodeProvider(providerOptions); //Создаем объект компилятора
+        CSharpCodeProvider Compiler = new CSharpCodeProvider(CompilerOptions); //Создаем объект компилятора
 
-        CompilerParameters compilerParams = new CompilerParameters //Задаем параметры компилятору
+        CompilerParameters compilerParameters = new CompilerParameters //Задаем параметры компилятору
         {
             GenerateInMemory = true,
             GenerateExecutable = false,
@@ -89,13 +89,13 @@ namespace Lab6
    }";
             RichTextBox Box = new RichTextBox();
             Box.Text = CodeForCompile;
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, Box.Text); //Получаем результат исполнения исходного кода при примененных параметрах
+            CompilerResults Res = Compiler.CompileAssemblyFromSource(compilerParameters, Box.Text); //Получаем результат исполнения исходного кода при примененных параметрах
 
             #region Отлов ошибок (Тут надо исправить, чтобы линия с ошибкой определялась однозначно)
-            if (results.Errors.HasErrors)
+            if (Res.Errors.HasErrors)
             {
                 int count = 0;
-                foreach (CompilerError error in results.Errors)
+                foreach (CompilerError error in Res.Errors)
                 {
                     err.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
                     for (int i = 0; i < richTextBox.Lines.Count(); i++)
@@ -114,40 +114,13 @@ namespace Lab6
             #endregion
 
             //Используем рефлексию для манипуляциями полученных классов и методов
-            object ObjectOfProgram = results.CompiledAssembly.CreateInstance("Lab6.Program");
+            object ObjectOfProgram = Res.CompiledAssembly.CreateInstance("Lab6.Program");
             MethodInfo main = ObjectOfProgram.GetType().GetMethod("Main");
 
             timer.Stop();
             time = 0;
 
             main.Invoke(ObjectOfProgram, null); //Запускаем метод main 
-        }
-
-        /// <summary>
-        /// ВО ВРЕМЯ ПЕЧАТИ КОДА подсвечивает его синтаксис
-        /// </summary>
-        public void CheckSyntax()
-        {
-            int Cursor = richTextBox.SelectionStart;
-
-            richTextBox.SelectionStart = 0;
-            richTextBox.SelectionLength = richTextBox.Text.Length;
-            richTextBox.SelectionColor = Color.White;
-
-            Regex KeyWords = new Regex("abstract |as |base |bool |break |byte |case |catch |char |checked |class |const |continue |decimal |default |delegate |do |double |else |enum |event |explicit |extern |false |finally |fixed |float |for |foreach |goto |if |implicit |in |int |interface |internal |is |lock |long |namespace |new |null |object |operator |out |override |params |private |protected |public |readonly |ref |return |sbyte |sealed |short |sizeof |stackalloc |static |string |struct |switch |this |throw |true |try |typeof |uint |ulong |unchecked |unsafe |ushort |using |virtual |void |volatile |var ");
-            MatchCollection Matches = KeyWords.Matches(richTextBox.Text);
-
-            if (Matches.Count != 0)
-            {
-                foreach (Match Match in Matches)
-                {
-                    richTextBox.SelectionStart = Match.Index;
-                    richTextBox.SelectionLength = Match.Length;
-                    richTextBox.SelectionColor = Color.LightGreen;
-                }
-            }
-            richTextBox.SelectionStart = Cursor;
-            richTextBox.SelectionLength = 0;
         }
 
         /// <summary>
@@ -248,7 +221,7 @@ namespace Lab6
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           compilerParams.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
+            compilerParameters.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
         }
 
         private void richTextBox_TextChanged(object sender, TextChangedEventArgs e)
