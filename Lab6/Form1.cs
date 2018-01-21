@@ -42,38 +42,7 @@ namespace Lab6
         /// <summary>
         /// Объявление классов, методов, делегатов, интерфейсов и структур
         /// </summary>
-        string BeforeCode = "";
-        /// <summary>
-        /// Код внутри метода Main
-        /// </summary>
-        string MainCode = "";
-        string[] dll = new string[]
-        {"System.dll",
-         "System.Linq.dll",
-         "System.Threading.Tasks.dll",
-         "System.Windows.Forms.dll",
-         "mscorlib.dll",
-         "System.Data.dll"
-        };
-
-        static Dictionary<string, string> Options = new Dictionary<string, string>
-        {
-            {"CompilerVersion", "v4.0"}
-        };
-                
-
-        CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options);
-
-        CompilerParameters Params = new CompilerParameters
-        {
-            GenerateInMemory = true,
-            GenerateExecutable = false
-        };
-        StringBuilder strb = new StringBuilder();
-        public void Compile()
-        {
-
-            code = @"using System; 
+        string BeforeCode = @"using System; 
 using System.Collections.Generic; 
 using System.ComponentModel; 
 using System.Data; 
@@ -104,7 +73,38 @@ Console.WriteLine(x);
 }
 static ui UI = new ui();
 
-        " + fastColoredTextBox1.Text + "    }}";
+        ";
+        /// <summary>
+        /// Код внутри метода Main
+        /// </summary>
+        string MainCode = "";
+        string[] dll = new string[]
+        {"System.dll",
+         "System.Linq.dll",
+         "System.Threading.Tasks.dll",
+         "System.Windows.Forms.dll",
+         "mscorlib.dll",
+         "System.Data.dll"
+        };
+
+        static Dictionary<string, string> Options = new Dictionary<string, string>
+        {
+            {"CompilerVersion", "v4.0"}
+        };
+                
+
+        CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options);
+
+        CompilerParameters Params = new CompilerParameters
+        {
+            GenerateInMemory = true,
+            GenerateExecutable = false
+        };
+        StringBuilder strb = new StringBuilder();
+        public void Compile()
+        {
+            CorrectCompile();
+            code = BeforeCode + MainCode;
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
             fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
             //Place beg = new Place(1,1);
@@ -202,7 +202,7 @@ static ui UI = new ui();
                 {
                     index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
                     BeforeCode += "\r\b" + fastColoredTextBox1.Text.Substring(mycol[i].Index, index[i] - mycol[i].Index);
-                    MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
+                    MainCode = MainCode.Remove(mycol[i].Index, index[i] - mycol[i].Index);
                     i++;
                 }
             }
