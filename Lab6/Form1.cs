@@ -159,7 +159,6 @@ static ui UI = new ui();
             Regex reg = new Regex(@"string|break|var|foreach|for|new|while|if |int |in |else|return|object|until|sbyte|shor|object|true|false|ushor|switch|case|null|long |ulong |float |double |char |bool |decimal |public|private|protected|void|static|delegate|enum|new|class\s[A-z,0-9]{1,10}|struct\s[A-z,0-9]{1,10}|interface\s[A-z,0-9]{1,10}|const");
             MatchCollection mycol = reg.Matches(textBox_input.Text);
 
-
             if (mycol.Count != 0)
             {
                 foreach (Match m in mycol)
