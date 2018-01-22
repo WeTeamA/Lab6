@@ -124,10 +124,17 @@ static ui UI = new ui();
                 {
                     Regex reg = new Regex(@"\r\n");
                     MatchCollection lines = reg.Matches(code);
-                    string errorline = code.Substring(lines[error.Line - 2].Index + 2, lines[error.Line - 1].Index - lines[error.Line - 2].Index - 2);
-                    Regex regb = new Regex(errorline);
-                    MatchCollection finds = regb.Matches(code);
-                    //strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
+                    Regex regtb = new Regex(@"\r\n");
+                    MatchCollection tb = regtb.Matches(fastColoredTextBox1.Text);
+                    string errorline = code.Substring(lines[error.Line - 2].Index + 2, lines[error.Line - 1].Index - lines[error.Line - 2].Index - 2); 
+                    int index = fastColoredTextBox1.Text.IndexOf(errorline);
+                    int Line = 0;
+                    while (index > tb[Line].Index)
+                    {
+                        Line++;
+                    }
+                    Line++;
+                    strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
                     Range rng = new Range(fastColoredTextBox1, 5);
                     //rng.SetStyle(ErrorCodeStyle);
                 }
