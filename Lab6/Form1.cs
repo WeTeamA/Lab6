@@ -13,6 +13,7 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.IO;
 using System.Text.RegularExpressions;
+using FastColoredTextBoxNS;
 
 namespace Lab6
 {
@@ -30,32 +31,18 @@ namespace Lab6
         /// Текст компилируемого кода
         /// </summary>
         string code;
-        string[] dll = new string[]
-        {"System.dll",
-         "System.Linq.dll",
-         "System.Threading.Tasks.dll",
-         "System.Windows.Forms.dll",
-         "mscorlib.dll",
-         "System.Data.dll"
-        };
-
-        static Dictionary<string, string> providerOptions = new Dictionary<string, string>
-        {
-            {"CompilerVersion", "v4.0"}
-        };
-                
-
-        CSharpCodeProvider provider = new CSharpCodeProvider(providerOptions);
-
-        CompilerParameters compilerParams = new CompilerParameters
-        {
-            GenerateInMemory = true,
-            GenerateExecutable = false
-        };
-        StringBuilder strb = new StringBuilder();
-        public void Compile()
-        {
-            code = @"using System; 
+        /// <summary>
+        /// Стиль ошибок текста
+        /// </summary>
+        Style ErrorCodeStyle = new TextStyle(Brushes.Black, Brushes.LightPink, FontStyle.Regular);
+        /// <summary>
+        /// Стиль ошибок текста
+        /// </summary>
+        Style CodeStyle = new TextStyle(Brushes.Black, Brushes.Honeydew, FontStyle.Regular);
+        /// <summary>
+        /// Объявление классов, методов, делегатов, интерфейсов и структур
+        /// </summary>
+        string BeforeCode = @"using System; 
 using System.Collections.Generic; 
 using System.ComponentModel; 
 using System.Data; 
@@ -86,14 +73,70 @@ Console.WriteLine(x);
 }
 static ui UI = new ui();
 
-        " + textBox_input.Text + "    }}";
-            CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code);
+        ";
+        /// <summary>
+        /// Код внутри метода Main
+        /// </summary>
+        string MainCode = "";
+        /// <summary>
+        /// Код внутри метода Main
+        /// </summary>
+        string ArterCode;
+        string[] dll = new string[]
+        {"System.dll",
+         "System.Linq.dll",
+         "System.Threading.Tasks.dll",
+         "System.Windows.Forms.dll",
+         "mscorlib.dll",
+         "System.Data.dll"
+        };
+
+        static Dictionary<string, string> Options = new Dictionary<string, string>
+        {
+            {"CompilerVersion", "v4.0"}
+        };
+
+
+        CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options);
+
+        CompilerParameters Params = new CompilerParameters
+        {
+            GenerateInMemory = true,
+            GenerateExecutable = false
+        };
+        StringBuilder strb = new StringBuilder();
+        public void Compile()
+        {
+            ArterCode = "";
+            CorrectCompile();
+            code = BeforeCode + @"public void Main()
+            {" + "\r\n" + MainCode + "\r\n" +  @"}" + "\n" +  ArterCode + "\r\n" + @"}}";
+            CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
+            fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
+            //Place beg = new Place(1,1);
+            // Place end = new Place(1, );
+            //Range tbrng = new Range(fastColoredTextBox1, Place );
+            // tbrng.SetStyle(CodeStyle);
 
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError error in results.Errors)
                 {
-                    strb.AppendLine(String.Format("Error ({0}): {1}", error.ErrorNumber, error.ErrorText));
+                    Regex reg = new Regex(@"\r\n");
+                    MatchCollection lines = reg.Matches(code);
+                    Regex regtb = new Regex(@"\r\n");
+                    MatchCollection tb = regtb.Matches(fastColoredTextBox1.Text);
+                    string errorline = code.Substring(lines[error.Line - 2].Index + 2, lines[error.Line - 1].Index - lines[error.Line - 2].Index - 2); 
+                    int index = fastColoredTextBox1.Text.IndexOf(errorline);
+                    int Line = 0;
+                    while (index > tb[Line].Index)
+                    {
+                        Line++;
+                    }
+                    Line++;
+                    strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
+                    Range rng = new Range(fastColoredTextBox1, 5);
+                    //rng.SetStyle(ErrorCodeStyle);
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -115,22 +158,87 @@ static ui UI = new ui();
             textBox_output.Text += result;
         }
 
+        public int FindIndex(MatchCollection mycol, MatchCollection mycolb, MatchCollection mycole, int i)
+        {
+            int bindex = 0;
+            int eindex = 0;
+            while (mycol[i].Index > mycolb[bindex].Index)
+            {
+                bindex++;
+            }
+            while (mycol[i].Index > mycole[eindex].Index)
+            {
+                eindex++;
+            }
+            int j = bindex + 1;
+            if (bindex < mycolb.Count)
+            {
+                while (mycolb[j].Index < mycole[eindex].Index)
+                {
+                    eindex++;
+                    if (j < mycolb.Count - 1)
+                    {
+                        j++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return eindex;
+        }
+
+        public void CorrectCompile()
+        {
+            MainCode = fastColoredTextBox1.Text;
+            Regex reg = new Regex(@"\w+\s+\w+[(].*[)]\s*[{]|struct|class|interface|delegate");
+            MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
+            Regex regb = new Regex(@"[{]");
+            MatchCollection mycolb = regb.Matches(fastColoredTextBox1.Text);
+            Regex rege = new Regex(@"[}]");
+            MatchCollection mycole = rege.Matches(fastColoredTextBox1.Text);
+            List<int> index = new List<int>();
+            int delet = 0;
+            int i = 0;
+            while(i < mycol.Count )
+            {
+                if (i != 0)
+                {
+                    if (index[index.Count - 1]  < mycol[i].Index)
+                    {
+                        index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
+                        ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
+                        MainCode = MainCode.Remove(mycol[i].Index - delet, index[index.Count - 1] - mycol[i].Index + 1);
+                        delet += index[index.Count - 1] - mycol[i].Index + 1;
+                        i++;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                if (index.Count == 0)
+                {
+                    index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
+                    ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index , index[index.Count - 1] - mycol[i].Index + 1 ) + "\n";
+                    MainCode = MainCode.Remove(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
+                    delet += index[index.Count - 1] - mycol[i].Index + 1;
+                    i++;
+                }
+            }
+
+
+            int a = 5;
+        }
+
         private void timer_Tick(object sender, EventArgs e)
         {
             time++;
-            if (time >= 2)
+            if (time >= 1)
             {
                 try
                 {
-                    
-                    // var sw = new StringWriter();
-                    // TextWriter sww = Console.Out;
-                    //  Console.SetOut(sw);
-                    // Console.SetError(sw);
-                    //Console.SetCursorPosition(0, 0);
-                    // textBox_output.Text = Console.ReadLine();
-                    //Console.WriteLine("You are travelling north at a speed of 10m/s");
-
                     using (StringWriter stringWriter = new StringWriter())
                     {
                         Console.SetOut(stringWriter);
@@ -144,20 +252,26 @@ static ui UI = new ui();
                     time = 0;
                     textBox_output.Clear();                 
                     textBox_output.Text = strb.ToString();
+                    
                     strb.Clear();
                 }
             }
         }
 
-        private void textBox_input_TextChanged(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            int cur = textBox_input.SelectionStart;
+            Params.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
+        }
+
+        private void fastColoredTextBox1_TextChanged(object sender, TextChangedEventArgs e)
+        {
             textBox_output.Clear();
             timer.Stop();
             time = 0;
             timer.Start();
             Regex reg = new Regex(@"string|break|var|foreach|for|new|while|if |int |in |else|return|object|until|sbyte|shor|object|true|false|ushor|switch|case|null|long |ulong |float |double |char |bool |decimal |public|private|protected|void|static|delegate|enum|new|class\s[A-z,0-9]{1,10}|struct\s[A-z,0-9]{1,10}|interface\s[A-z,0-9]{1,10}|const");
             MatchCollection mycol = reg.Matches(textBox_input.Text);
+
 
             if (mycol.Count != 0)
             {
