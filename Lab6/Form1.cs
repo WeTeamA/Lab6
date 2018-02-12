@@ -33,6 +33,7 @@ namespace Lab6
         /// </summary>
         string CodeForCompile;
         string Code = "";
+
         string Others;
         string[] dll = new string[]
         {"System.dll",
@@ -113,7 +114,7 @@ namespace Lab6
             }
             #endregion
 
-            //Используем рефлексию для манипуляциями полученных классов и методов
+            //Используем рефлексию для манипуляций полученных классов и методов
             object ObjectOfProgram = Res.CompiledAssembly.CreateInstance("Lab6.Program");
             MethodInfo main = ObjectOfProgram.GetType().GetMethod("Main");
 
@@ -142,7 +143,7 @@ namespace Lab6
                         char[] OthersChar = new char[Code.Length]; //Временный массив Char для правильного аргументирования
                         for (int i = Matches[0].Index + Matches[0].Length; i < Code.Length; i++)
                         {
-                            if (Code[i] == '{')
+                            if (Code[i-1] == '{')
                                 k++;
                             if (Code[i] == '}')
                             {
@@ -222,6 +223,16 @@ namespace Lab6
         private void Form1_Load(object sender, EventArgs e)
         {
             compilerParameters.ReferencedAssemblies.AddRange(dll);//Добавляем библиотеки к параметрам компилятора
+            richTextBox.Text = @"class Writing
+{
+    public void Write()
+    {
+        Console.WriteLine(""Привет, это работет!"");
+    }
+}
+
+Writing write = new Writing();
+write.Write();";
         }
 
         private void richTextBox_TextChanged(object sender, TextChangedEventArgs e)
