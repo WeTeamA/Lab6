@@ -34,7 +34,7 @@ namespace Lab6
         /// <summary>
         /// Стиль ошибок текста
         /// </summary>
-        Style ErrorCodeStyle = new TextStyle(Brushes.Black, Brushes.LightPink, FontStyle.Regular);
+        Style ErrorCodeStyle = new TextStyle(Brushes.Black, Brushes.LightPink, FontStyle.Bold);
         /// <summary>
         /// Стиль ошибок текста
         /// </summary>
@@ -110,14 +110,14 @@ static ui UI = new ui();
             ArterCode = "";
             CorrectCompile();
             code = BeforeCode + @"public void Main()
-            {" + "\r\n" + MainCode + "\r\n" +  @"}" + "\n" +  ArterCode + "\r\n" + @"}}";
+            {" + "\r\n" + MainCode + "\r\n" +  @"}" +   ArterCode + "\r\n" + @"}}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
-            fastColoredTextBox1.ChangedLineColor = Color.Honeydew;
-            //Place beg = new Place(1,1);
-            // Place end = new Place(1, );
-            //Range tbrng = new Range(fastColoredTextBox1, Place );
-            // tbrng.SetStyle(CodeStyle);
-
+            //Range rnjg = new Range(fastColoredTextBox1, 5);
+            //rnjg.SetStyle(ErrorCodeStyle);
+            //Place beg = new Place(0,0);
+            //Place end = new Place(fastColoredTextBox1.Lines[fastColoredTextBox1.LinesCount - 1].Length -1 ,fastColoredTextBox1.LinesCount - 1);            
+            //Range rngj = new Range(fastColoredTextBox1, beg, end);
+            //rngj.SetStyle(CodeStyle);
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError error in results.Errors)
@@ -135,7 +135,7 @@ static ui UI = new ui();
                     }
                     Line++;
                     strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
-                    Range rng = new Range(fastColoredTextBox1, 5);
+                    //Range rng = new Range(fastColoredTextBox1, Line - 1);
                     //rng.SetStyle(ErrorCodeStyle);
                 }
                 throw new InvalidOperationException(strb.ToString());
@@ -170,29 +170,33 @@ static ui UI = new ui();
             {
                 eindex++;
             }
-            int j = bindex + 1;
-            if (bindex < mycolb.Count)
+            if (bindex + 1 != mycolb.Count)
             {
-                while (mycolb[j].Index < mycole[eindex].Index)
+                int j = bindex + 1;
+                if (bindex < mycolb.Count)
                 {
-                    eindex++;
-                    if (j < mycolb.Count - 1)
+                    while (mycolb[j].Index < mycole[eindex].Index)
                     {
-                        j++;
-                    }
-                    else
-                    {
-                        break;
+                        eindex++;
+                        if (j < mycolb.Count - 1)
+                        {
+                            j++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
+
             return eindex;
         }
 
         public void CorrectCompile()
         {
             MainCode = fastColoredTextBox1.Text;
-            Regex reg = new Regex(@"\w+\s+\w+[(].*[)]\s*[{]|struct|class|interface|delegate");
+            Regex reg = new Regex(@"\w+\s+\w+[(].*[)]\s*[{]|struct|class|interface|delegate|enum");
             MatchCollection mycol = reg.Matches(fastColoredTextBox1.Text);
             Regex regb = new Regex(@"[{]");
             MatchCollection mycolb = regb.Matches(fastColoredTextBox1.Text);
@@ -201,32 +205,47 @@ static ui UI = new ui();
             List<int> index = new List<int>();
             int delet = 0;
             int i = 0;
-            while(i < mycol.Count )
+            if (mycolb.Count == mycole.Count)
             {
-                if (i != 0)
+                while (i < mycol.Count)
                 {
-                    if (index[index.Count - 1]  < mycol[i].Index)
+                    if (i != 0)
+                    {
+                        if (index[index.Count - 1] < mycol[i].Index)
+                        {
+                            index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
+                            ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
+                            MainCode = MainCode.Remove(mycol[i].Index - delet, index[index.Count - 1] - mycol[i].Index + 1);
+                            delet += index[index.Count - 1] - mycol[i].Index + 1;
+                            i++;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                    }
+                    if (index.Count == 0)
                     {
                         index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-                        ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
-                        MainCode = MainCode.Remove(mycol[i].Index - delet, index[index.Count - 1] - mycol[i].Index + 1);
+                        ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1) + "\n";
+                        MainCode = MainCode.Remove(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
                         delet += index[index.Count - 1] - mycol[i].Index + 1;
                         i++;
                     }
-                    else
-                    {
-                        i++;
-                    }
-                }
-                if (index.Count == 0)
-                {
-                    index.Add(mycole[FindIndex(mycol, mycolb, mycole, i)].Index);
-                    ArterCode += fastColoredTextBox1.Text.Substring(mycol[i].Index , index[index.Count - 1] - mycol[i].Index + 1 ) + "\n";
-                    MainCode = MainCode.Remove(mycol[i].Index, index[index.Count - 1] - mycol[i].Index + 1);
-                    delet += index[index.Count - 1] - mycol[i].Index + 1;
-                    i++;
                 }
             }
+            else
+            {
+                if (mycolb.Count > mycole.Count)
+                {
+                    textBox_output.Text = ("Нехватает (" + (mycolb.Count - mycole.Count).ToString() + ") символов } ");
+                }
+                if (mycolb.Count < mycole.Count)
+                {
+                    textBox_output.Text = ("Нехватает (" + (mycole.Count - mycolb.Count).ToString() + ") символов { ");
+                }
+            }
+
 
 
             int a = 5;
@@ -269,7 +288,6 @@ static ui UI = new ui();
             timer.Stop();
             time = 0;
             timer.Start();
-            //We.ChangedRange
         }
     }
 }

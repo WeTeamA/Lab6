@@ -139,7 +139,7 @@
 </value>
   </data>
   <data name="fastColoredTextBox1.Text" xml:space="preserve">
-    <value>int[] m = {9, 8, 7, 6, 5, 4, 3, 2, 1}
+    <value>int[] m = {9, 8, 7, 6, 5, 4, 3, 2, 1};
 void Sort(int[] array)
 {
   for (int x = 0; x &lt; array.Length; x++)
@@ -155,7 +155,7 @@ void Sort(int[] array)
 }
 Sort(m);
 string s = "";
-foreach (int x in m) S += m.ToString()+" ";
+foreach (int x in m) s += x.ToString()+" ";
 UI.WriteLine(s);
 </value>
   </data>
