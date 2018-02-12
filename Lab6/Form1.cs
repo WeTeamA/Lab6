@@ -91,15 +91,15 @@ static ui UI = new ui();
          "System.Data.dll"
         };
 
-        static Dictionary<string, string> Options = new Dictionary<string, string>
+        static Dictionary<string, string> Options = new Dictionary<string, string> //Задаем опции компилятора 
         {
             {"CompilerVersion", "v4.0"}
         };
 
 
-        CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options);
+        CSharpCodeProvider CSharpProvider = new CSharpCodeProvider(Options); //Создаем объект компилятора на основе опций
 
-        CompilerParameters Params = new CompilerParameters
+        CompilerParameters Params = new CompilerParameters //Создаем объект параметров компиляции
         {
             GenerateInMemory = true,
             GenerateExecutable = false
@@ -110,9 +110,9 @@ static ui UI = new ui();
             ArterCode = "";
             CorrectCompile();
             code = BeforeCode + @"public void Main()
-            {" + "\r\n" + MainCode + "\r\n" +  @"}" +   ArterCode + "\r\n" + @"}}";
-            CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
-            if (results.Errors.HasErrors)
+            {" + "\r\n" + MainCode + "\r\n" +  @"}" +   ArterCode + "\r\n" + @"}}";//Собираем полный код для последующей компиляции
+            CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code); //Компилируем (создаем новый объект)
+            if (results.Errors.HasErrors) //Проверяем ошибки
             {
                 foreach (CompilerError error in results.Errors)
                 {
@@ -133,19 +133,15 @@ static ui UI = new ui();
                 throw new InvalidOperationException(strb.ToString());
             }
 
-            Assembly assembly = results.CompiledAssembly;
-            Type program = assembly.GetType("Lab6.Program");
-            MethodInfo method = program.GetMethod("Main");
-
             timer.Stop();
             time = 0;
 
-            object obj = results.CompiledAssembly.CreateInstance("Lab6.Program");
-            MethodInfo info = obj.GetType().GetMethod("Main");
+            object obj = results.CompiledAssembly.CreateInstance("Lab6.Program"); //Компилируем с созданием нового объекта 
+            MethodInfo info = obj.GetType().GetMethod("Main"); //Получаем метод Main из нашей сборки
             var sw = new StringWriter();
             Console.SetOut(sw);
             Console.SetError(sw);
-            info.Invoke(obj, null);
+            info.Invoke(obj, null); //Запускаем полученный ранее метод
             string result = sw.ToString();
             textBox_output.Text += result;
         }
