@@ -132,7 +132,7 @@ namespace Lab6
             {
                 int Cursor = richTextBox.SelectionStart;
                 Code = richTextBox.Text;
-                Regex OthersElements = new Regex("class |delegate |enum |interface |struct |void ");
+                Regex OthersElements = new Regex(@"\w+\s+\w+[(].*[)]\s*[{]|class |delegate |enum |interface |struct |void ");
                 while (true)
                 {
                     MatchCollection Matches = OthersElements.Matches(Code);
