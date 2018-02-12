@@ -112,12 +112,6 @@ static ui UI = new ui();
             code = BeforeCode + @"public void Main()
             {" + "\r\n" + MainCode + "\r\n" +  @"}" +   ArterCode + "\r\n" + @"}}";
             CompilerResults results = CSharpProvider.CompileAssemblyFromSource(Params, code);
-            //Range rnjg = new Range(fastColoredTextBox1, 5);
-            //rnjg.SetStyle(ErrorCodeStyle);
-            //Place beg = new Place(0,0);
-            //Place end = new Place(fastColoredTextBox1.Lines[fastColoredTextBox1.LinesCount - 1].Length -1 ,fastColoredTextBox1.LinesCount - 1);            
-            //Range rngj = new Range(fastColoredTextBox1, beg, end);
-            //rngj.SetStyle(CodeStyle);
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError error in results.Errors)
@@ -135,8 +129,6 @@ static ui UI = new ui();
                     }
                     Line++;
                     strb.AppendLine(String.Format("Error ({0}): {1} (line {2})", error.ErrorNumber, error.ErrorText, Line));                    
-                    //Range rng = new Range(fastColoredTextBox1, Line - 1);
-                    //rng.SetStyle(ErrorCodeStyle);
                 }
                 throw new InvalidOperationException(strb.ToString());
             }
@@ -245,10 +237,6 @@ static ui UI = new ui();
                     textBox_output.Text = ("Нехватает (" + (mycole.Count - mycolb.Count).ToString() + ") символов { ");
                 }
             }
-
-
-
-            int a = 5;
         }
 
         private void timer_Tick(object sender, EventArgs e)
